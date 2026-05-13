@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GenApp — Processo Completo: Entradas, Processo e Saídas</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #ffffff;
+        color: #1e293b;
+        overflow: hidden;
+        height: 100vh;
+      }
+      .slide {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 44px 64px;
+        position: relative;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .slide.active {
+        display: flex;
+      }
+      .slide-number {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
+        font-size: 13px;
+        color: #94a3b8;
+      }
+      .nav {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 100;
+      }
+      .nav button {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .nav button:hover {
+        background: #e2e8f0;
+        border-color: #0284c7;
+      }
+      h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 14px;
+        color: #0f172a;
+      }
+      h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #1e293b;
+      }
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: #475569;
+        max-width: 900px;
+      }
+      .accent {
+        color: #0891b2;
+      }
+      .accent2 {
+        color: #7c3aed;
+      }
+      .highlight {
+        color: #059669;
+      }
+      .warn {
+        color: #d97706;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #475569;
+        padding-left: 22px;
+        position: relative;
+        margin-bottom: 4px;
+      }
+      ul li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #0891b2;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        align-items: start;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+      }
+      .card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 22px;
+      }
+      .card h4 {
+        font-size: 0.95rem;
+        color: #0891b2;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .card p {
+        font-size: 0.9rem;
+        color: #64748b;
+      }
+      .input-box {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-left: 4px solid #3b82f6;
+        border-radius: 10px;
+        padding: 18px;
+      }
+      .input-box h4 {
+        font-size: 0.95rem;
+        color: #1d4ed8;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .input-box p,
+      .input-box li {
+        font-size: 0.9rem;
+        color: #1e40af;
+      }
+      .input-box ul li::before {
+        color: #3b82f6;
+      }
+      .output-box {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-left: 4px solid #059669;
+        border-radius: 10px;
+        padding: 18px;
+      }
+      .output-box h4 {
+        font-size: 0.95rem;
+        color: #047857;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .output-box p,
+      .output-box li {
+        font-size: 0.9rem;
+        color: #065f46;
+      }
+      .output-box ul li::before {
+        color: #059669;
+      }
+      .process-box {
+        background: #faf5ff;
+        border: 1px solid #e9d5ff;
+        border-left: 4px solid #7c3aed;
+        border-radius: 10px;
+        padding: 18px;
+      }
+      .process-box h4 {
+        font-size: 0.95rem;
+        color: #6d28d9;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .process-box p,
+      .process-box li {
+        font-size: 0.9rem;
+        color: #5b21b6;
+      }
+      .process-box ul li::before {
+        color: #7c3aed;
+      }
+      .flow-horizontal {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .flow-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 0.8rem;
+        color: #334155;
+        text-align: center;
+        min-width: 100px;
+      }
+      .flow-arrow {
+        color: #0891b2;
+        font-size: 1.2rem;
+      }
+      .subtitle {
+        font-size: 1.3rem;
+        color: #64748b;
+        margin-bottom: 28px;
+      }
+      .tag {
+        display: inline-block;
+        background: #ecfeff;
+        color: #0e7490;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-right: 6px;
+        margin-bottom: 6px;
+      }
+      .tag.purple {
+        background: #f5f3ff;
+        color: #6d28d9;
+      }
+      .tag.green {
+        background: #ecfdf5;
+        color: #047857;
+      }
+      .tag.yellow {
+        background: #fffbeb;
+        color: #b45309;
+      }
+      .tag.pink {
+        background: #fdf2f8;
+        color: #be185d;
+      }
+      .tag.blue {
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+      .cpqd-label {
+        display: inline-block;
+        background: #ecfeff;
+        color: #0e7490;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: #e2e8f0;
+        margin: 14px 0;
+      }
+      .two-col-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 36px;
+      }
+      .actor-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        color: #334155;
+        margin-bottom: 10px;
+      }
+      .legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 16px;
+        font-size: 0.85rem;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+      }
+      .legend-dot.input {
+        background: #3b82f6;
+      }
+      .legend-dot.process {
+        background: #7c3aed;
+      }
+      .legend-dot.output {
+        background: #059669;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SLIDE 1: CAPA -->
+    <div class="slide active" id="slide-1">
+      <h3 style="color: #64748b">Processo End-to-End com Entradas e Saídas</h3>
+      <h1>
+        Geração de uma <span class="accent">Aplicação de IA</span><br />no Setor
+        Público
+      </h1>
+      <p class="subtitle">
+        Cada fase com suas entradas necessárias, o processo executado e as
+        saídas geradas — visão completa do fluxo de uma GenApp de Política
+        Pública
+      </p>
+      <div style="margin-top: 20px">
+        <span class="tag blue">Entradas</span>
+        <span class="tag purple">Processo</span>
+        <span class="tag green">Saídas</span>
+        <span class="tag">GenAI</span>
+        <span class="tag yellow">Guard Rails</span>
+        <span class="tag pink">Privacy by Design</span>
+      </div>
+      <div class="legend" style="margin-top: 24px">
+        <div class="legend-item">
+          <div class="legend-dot input"></div>
+          Entradas (o que é necessário)
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot process"></div>
+          Processo (o que acontece)
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot output"></div>
+          Saídas (o que é produzido)
+        </div>
+      </div>
+      <div class="slide-number">1 / 18</div>
+    </div>
+
+    <!-- SLIDE 2: VISÃO GERAL DO FLUXO -->
+    <div class="slide" id="slide-2">
+      <h2>
+        Visão Geral — <span class="accent">Entradas → Processo → Saídas</span>
+      </h2>
+      <div class="flow-horizontal">
+        <div
+          class="flow-box"
+          style="border-color: #3b82f6; background: #eff6ff"
+        >
+          Demanda<br /><small>do Gestor</small>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div
+          class="flow-box"
+          style="border-color: #7c3aed; background: #faf5ff"
+        >
+          Fase 0<br /><small>Design</small>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div
+          class="flow-box"
+          style="border-color: #7c3aed; background: #faf5ff"
+        >
+          Fase 1<br /><small>Dados</small>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div
+          class="flow-box"
+          style="border-color: #7c3aed; background: #faf5ff"
+        >
+          Fase 2<br /><small>Ética</small>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div
+          class="flow-box"
+          style="border-color: #7c3aed; background: #faf5ff"
+        >
+          Fase 3<br /><small>GenApp</small>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div
+          class="flow-box"
+          style="border-color: #7c3aed; background: #faf5ff"
+        >
+          Fase 4<br /><small>Entrega</small>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div
+          class="flow-box"
+          style="border-color: #059669; background: #ecfdf5"
+        >
+          Cidadão<br /><small>atendido</small>
+        </div>
+      </div>
+      <br />
+      <div class="grid-3">
+        <div class="input-box">
+          <h4>📥 Entradas (Inputs)</h4>
+          <p>
+            O que cada fase precisa receber para iniciar seu trabalho. Sem as
+            entradas corretas, a fase não pode produzir saídas confiáveis.
+          </p>
+        </div>
+        <div class="process-box">
+          <h4>⚙️ Processo (Transformação)</h4>
+          <p>
+            As atividades executadas pelos Núcleos CPQD que transformam entradas
+            em saídas com qualidade e governança.
+          </p>
+        </div>
+        <div class="output-box">
+          <h4>📤 Saídas (Outputs)</h4>
+          <p>
+            Artefatos, sistemas e decisões produzidos — que se tornam entradas
+            da fase seguinte.
+          </p>
+        </div>
+      </div>
+      <br />
+      <div class="card">
+        <h4>Princípio de Encadeamento</h4>
+        <p>
+          As saídas de cada fase são as entradas da próxima. Se uma saída está
+          incompleta ou com baixa qualidade, a fase seguinte herda o problema.
+          Por isso cada fase tem critérios de aceite antes de avançar.
+        </p>
+      </div>
+      <div class="slide-number">2 / 18</div>
+    </div>
+  </body>
+</html>
+
+<!-- SLIDE 3: FASE 0 — ENTRADAS -->
+<div class="slide" id="slide-3">
+  <div class="actor-badge">
+    <span>📋</span> FASE 0 — Compreensão, Prospecção e Design
+  </div>
+  <h2>Fase 0: <span class="accent2">Entradas</span> → Processo → Saídas</h2>
+  <div class="grid-3">
+    <div class="input-box">
+      <h4>📥 Entradas Necessárias</h4>
+      <ul>
+        <li>Demanda formal do Gestor Público (ofício, reunião, briefing)</li>
+        <li>Descrição do problema público a ser resolvido</li>
+        <li>Indicação do público-alvo (quem será beneficiado)</li>
+        <li>Orçamento disponível ou teto orçamentário</li>
+        <li>Prazo desejado para entrega</li>
+        <li>
+          Dados existentes sobre o problema (relatórios, pesquisas, indicadores)
+        </li>
+        <li>Legislação e normas aplicáveis</li>
+        <li>Stakeholders e decisores envolvidos</li>
+      </ul>
+    </div>
+    <div class="process-box">
+      <h4>⚙️ Processo (<span class="cpqd-label">META3</span>)</h4>
+      <ul>
+        <li>Mapeamento de riscos e entendimento profundo</li>
+        <li>Definição das Personas (público-alvo)</li>
+        <li>Definição de KPIs mensuráveis</li>
+        <li>Análise de viabilidade técnica e orçamentária</li>
+        <li>Benchmarking de soluções similares</li>
+        <li>Workshops com stakeholders</li>
+        <li>Priorização de funcionalidades (MoSCoW)</li>
+      </ul>
+    </div>
+    <div class="output-box">
+      <h4>📤 Saídas Produzidas</h4>
+      <ul>
+        <li>Escopo aprovado e documentado</li>
+        <li>KPIs do projeto definidos e mensuráveis</li>
+        <li>Personas mapeadas com necessidades reais</li>
+        <li>Riscos identificados + plano de mitigação</li>
+        <li>Documento de viabilidade técnica</li>
+        <li>Cronograma macro aprovado</li>
+        <li>Termo de abertura do projeto</li>
+      </ul>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-size: 0.9rem; color: #64748b">
+    <strong>Critério de aceite:</strong> Escopo assinado pelo Gestor + KPIs
+    quantificáveis + Personas validadas com dados reais. Sem isso, não avança
+    para Fase 1.
+  </p>
+  <div class="slide-number">3 / 18</div>
+</div>
+
+<!-- SLIDE 4: FASE 1 — ENTRADAS -->
+<div class="slide" id="slide-4">
+  <div class="actor-badge">
+    <span>🗄️</span> FASE 1 — Engenharia, Levantamento e Integração de Dados
+  </div>
+  <h2>Fase 1: <span class="accent">Entradas</span> → Processo → Saídas</h2>
+  <div class="grid-3">
+    <div class="input-box">
+      <h4>📥 Entradas Necessárias</h4>
+      <ul>
+        <li>Escopo aprovado (saída da Fase 0)</li>
+        <li>Personas definidas com critérios de segmentação</li>
+        <li>
+          Acesso às bases de dados governamentais (CadÚnico, CNIS, SIAFI, etc.)
+        </li>
+        <li>Credenciais e autorizações de acesso aos sistemas-fonte</li>
+        <li>Dicionário de dados das bases existentes</li>
+        <li>Regras de negócio para cruzamento de dados</li>
+        <li>Requisitos de qualidade de dados (completude, acurácia)</li>
+        <li>Padrões de interoperabilidade exigidos (e-PING, OpenAPI)</li>
+      </ul>
+    </div>
+    <div class="process-box">
+      <h4>
+        ⚙️ Processo (<span class="cpqd-label">META5</span> +
+        <span class="cpqd-label">META1</span>)
+      </h4>
+      <ul>
+        <li>Cruzamento de bases com base nas Personas</li>
+        <li>Limpeza e normalização no Data Lakehouse</li>
+        <li>Validação de endereçamento real</li>
+        <li>Consolidação de datasets confiáveis</li>
+        <li>Catalogação de metadados</li>
+        <li>Criação de APIs REST/GraphQL</li>
+        <li>Testes de qualidade de dados</li>
+        <li>Documentação técnica das APIs</li>
+      </ul>
+    </div>
+    <div class="output-box">
+      <h4>📤 Saídas Produzidas</h4>
+      <ul>
+        <li>Datasets consolidados e confiáveis</li>
+        <li>Endereçamento real validado</li>
+        <li>APIs seguras para consumo (REST/GraphQL)</li>
+        <li>Metadados catalogados e documentados</li>
+        <li>Relatório de qualidade de dados</li>
+        <li>Data Lakehouse configurado</li>
+        <li>Documentação OpenAPI das interfaces</li>
+      </ul>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-size: 0.9rem; color: #64748b">
+    <strong>Critério de aceite:</strong> Dados com score de qualidade ≥ 85% +
+    APIs funcionais com testes automatizados + Endereçamento validado para ≥ 90%
+    das Personas.
+  </p>
+  <div class="slide-number">4 / 18</div>
+</div>
+
+<!-- SLIDE 5: FASE 2 — ENTRADAS -->
+<div class="slide" id="slide-5">
+  <div class="actor-badge">
+    <span>🛡️</span> FASE 2 — Conformidade, Ética e Proteção de Dados
+  </div>
+  <h2>
+    Fase 2: <span style="color: #db2777">Entradas</span> → Processo → Saídas
+  </h2>
+  <div class="grid-3">
+    <div class="input-box">
+      <h4>📥 Entradas Necessárias</h4>
+      <ul>
+        <li>Datasets consolidados (saída da Fase 1)</li>
+        <li>APIs documentadas (saída da Fase 1)</li>
+        <li>Personas e segmentações definidas (Fase 0)</li>
+        <li>
+          Legislação aplicável (LGPD, Marco Legal da IA, regulamentos setoriais)
+        </li>
+        <li>Política de privacidade do órgão</li>
+        <li>
+          Relatório de Impacto à Proteção de Dados (RIPD) existente ou template
+        </li>
+        <li>Requisitos de acessibilidade e inclusão</li>
+        <li>Critérios de fairness definidos (grupos protegidos)</li>
+        <li>Arquitetura técnica proposta (infra, rede, cloud)</li>
+      </ul>
+    </div>
+    <div class="process-box">
+      <h4>
+        ⚙️ Processo (<span class="cpqd-label">META3</span> +
+        <span class="cpqd-label">META4</span>)
+      </h4>
+      <ul>
+        <li>Aplicação de metodologias de mitigação de vieses</li>
+        <li>Testes de fairness nos modelos e dados</li>
+        <li>Documentação ética (Model Cards)</li>
+        <li>Privacy by Design na arquitetura</li>
+        <li>Implementação de PETs</li>
+        <li>Anonimização e pseudonimização</li>
+        <li>Pen-testing e validação de segurança</li>
+        <li>Elaboração/atualização do RIPD</li>
+      </ul>
+    </div>
+    <div class="output-box">
+      <h4>📤 Saídas Produzidas</h4>
+      <ul>
+        <li>Dados do cidadão protegidos (LGPD)</li>
+        <li>Infraestrutura validada e segura</li>
+        <li>Vieses identificados e mitigados</li>
+        <li>Documentação ética completa (Model Cards)</li>
+        <li>RIPD aprovado</li>
+        <li>Relatório de pen-testing</li>
+        <li>Certificação de conformidade</li>
+        <li>PETs implementadas e testadas</li>
+      </ul>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-size: 0.9rem; color: #64748b">
+    <strong>Critério de aceite:</strong> RIPD aprovado pelo DPO + Score de
+    fairness dentro dos limites + Zero vulnerabilidades críticas + LGPD
+    compliance checklist 100%.
+  </p>
+  <div class="slide-number">5 / 18</div>
+</div>
+
+<!-- SLIDE 6: FASE 3 — ENTRADAS -->
+<div class="slide" id="slide-6">
+  <div class="actor-badge">
+    <span>🏭</span> FASE 3 — Fábrica da Solução e Interpretação Generativa
+  </div>
+  <h2>Fase 3: <span class="highlight">Entradas</span> → Processo → Saídas</h2>
+  <div class="grid-3">
+    <div class="input-box">
+      <h4>📥 Entradas Necessárias</h4>
+      <ul>
+        <li>Escopo e KPIs aprovados (Fase 0)</li>
+        <li>APIs seguras e documentadas (Fase 1)</li>
+        <li>Datasets anonimizados e validados (Fase 2)</li>
+        <li>Model Cards e requisitos éticos (Fase 2)</li>
+        <li>Regras de Guard Rails (limites do LLM)</li>
+        <li>Prompts e instruções de domínio da política</li>
+        <li>Base de conhecimento oficial (documentos, normas, FAQs)</li>
+        <li>Casos de teste com Personas reais</li>
+        <li>Critérios de qualidade de resposta (tom, precisão, escopo)</li>
+      </ul>
+    </div>
+    <div class="process-box">
+      <h4>⚙️ Processo (<span class="cpqd-label">META2</span>)</h4>
+      <ul>
+        <li>Configuração da Plataforma GenAI (Low/No-code)</li>
+        <li>Orquestração de agentes de IA especializados</li>
+        <li>Calibração de Guard Rails no LLM</li>
+        <li>Integração com APIs das fases anteriores</li>
+        <li>Configuração de fluxos de decisão</li>
+        <li>Testes de qualidade com Personas</li>
+        <li>Ajuste fino de prompts e respostas</li>
+        <li>Validação de escopo (não responde fora)</li>
+      </ul>
+    </div>
+    <div class="output-box">
+      <h4>📤 Saídas Produzidas</h4>
+      <ul>
+        <li>"GenApp" da Política Pública funcionando</li>
+        <li>Agentes de IA orquestrados e testados</li>
+        <li>Guard Rails calibrados e validados</li>
+        <li>APIs integradas end-to-end</li>
+        <li>Relatório de testes com Personas</li>
+        <li>Documentação técnica da GenApp</li>
+        <li>Plano de rollout para Fase 4</li>
+      </ul>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-size: 0.9rem; color: #64748b">
+    <strong>Critério de aceite:</strong> GenApp responde corretamente ≥ 95% dos
+    casos de teste + Guard Rails bloqueiam 100% das tentativas fora de escopo +
+    Tempo de resposta < 3s.
+  </p>
+  <div class="slide-number">6 / 18</div>
+</div>
+
+<!-- SLIDE 7: FASE 4 — ENTRADAS -->
+<div class="slide" id="slide-7">
+  <div class="actor-badge">
+    <span>📬</span> FASE 4 — Entrega à Persona e Monitoramento
+  </div>
+  <h2>Fase 4: <span class="warn">Entradas</span> → Processo → Saídas</h2>
+  <div class="grid-3">
+    <div class="input-box">
+      <h4>📥 Entradas Necessárias</h4>
+      <ul>
+        <li>GenApp validada e pronta (saída da Fase 3)</li>
+        <li>Personas segmentadas com endereçamento validado (Fases 0+1)</li>
+        <li>Regras de comunicação por canal (tom, frequência, horário)</li>
+        <li>Templates de mensagens aprovados pelo Gestor</li>
+        <li>Configuração de canais (Caixa Postal, SMS, app, e-mail)</li>
+        <li>Plano de rollout (faseamento, grupos piloto)</li>
+        <li>KPIs de engajamento definidos (taxa abertura, cliques, adesão)</li>
+        <li>Dashboards configurados para monitoramento</li>
+        <li>Plano de contingência (fallback se canal falhar)</li>
+      </ul>
+    </div>
+    <div class="process-box">
+      <h4>
+        ⚙️ Processo (<span class="cpqd-label">META6</span> +
+        <span class="cpqd-label">META7</span>)
+      </h4>
+      <ul>
+        <li>Cruzamento GenApp + plataforma CDP</li>
+        <li>Segmentação por Personas</li>
+        <li>Geração de mensagens personalizadas</li>
+        <li>Entrega multicanal (Caixa Postal, app, SMS)</li>
+        <li>Monitoramento de engajamento em tempo real</li>
+        <li>Clipping e análise de percepção pública</li>
+        <li>Geração de insights preditivos</li>
+        <li>Dashboards para o Gestor</li>
+      </ul>
+    </div>
+    <div class="output-box">
+      <h4>📤 Saídas Produzidas</h4>
+      <ul>
+        <li>Cidadão recebe mensagem proativa personalizada</li>
+        <li>Checklist na Caixa Postal digital</li>
+        <li>Dashboards de monitoramento em tempo real</li>
+        <li>Clipping exportável e insights preditivos</li>
+        <li>Relatório de engajamento por Persona</li>
+        <li>Alertas automáticos de baixa adesão</li>
+        <li>Dados para ciclo de feedback</li>
+      </ul>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-size: 0.9rem; color: #64748b">
+    <strong>Critério de aceite:</strong> Taxa de entrega ≥ 98% + Dashboards
+    operacionais + Primeiro ciclo de feedback executado em até 2 semanas após
+    go-live.
+  </p>
+  <div class="slide-number">7 / 18</div>
+</div>
+
+<!-- SLIDE 8: CICLO DE FEEDBACK — ENTRADAS -->
+<div class="slide" id="slide-8">
+  <h2>
+    Ciclo de <span class="accent">Feedback</span> — Entradas → Processo → Saídas
+  </h2>
+  <div class="grid-3">
+    <div class="input-box">
+      <h4>📥 Entradas do Ciclo</h4>
+      <ul>
+        <li>
+          Métricas de engajamento da Fase 4 (taxa abertura, cliques, adesão)
+        </li>
+        <li>KPIs originais da Fase 0 (baseline para comparação)</li>
+        <li>Feedback direto do cidadão (NPS, reclamações, sugestões)</li>
+        <li>Clipping de mídia e percepção pública</li>
+        <li>Logs de Guard Rail triggers (tentativas bloqueadas)</li>
+        <li>Relatórios de anomalias e erros</li>
+        <li>Dados de uso por canal e horário</li>
+      </ul>
+    </div>
+    <div class="process-box">
+      <h4>⚙️ Processo (Gestor + Núcleos)</h4>
+      <ul>
+        <li>Comparação métricas reais vs. KPIs</li>
+        <li>Identificação de gaps e oportunidades</li>
+        <li>Ajuste de tom da comunicação (META6)</li>
+        <li>Refinamento de modelos e Guard Rails (META2/META3)</li>
+        <li>Atualização de Personas se necessário</li>
+        <li>Priorização de melhorias</li>
+        <li>Decisão: iterar, escalar ou encerrar</li>
+      </ul>
+    </div>
+    <div class="output-box">
+      <h4>📤 Saídas do Ciclo</h4>
+      <ul>
+        <li>Plano de ajustes priorizado</li>
+        <li>GenApp atualizada (nova versão)</li>
+        <li>Comunicação recalibrada</li>
+        <li>KPIs atualizados (se necessário)</li>
+        <li>Relatório de progresso ao Gestor</li>
+        <li>Decisão documentada (continuar/escalar/encerrar)</li>
+      </ul>
+    </div>
+  </div>
+  <br />
+  <div class="card" style="text-align: center">
+    <p style="font-size: 1.1rem; color: #1e293b">
+      Entrega → Medição → Análise → Ajuste → Entrega &nbsp; 🔄
+    </p>
+    <p style="margin-top: 6px">
+      O ciclo se repete até atingir as metas ou até decisão de encerramento pelo
+      Gestor.
+    </p>
+  </div>
+  <div class="slide-number">8 / 18</div>
+</div>
+
+<!-- SLIDE 9: MAPA COMPLETO ENTRADAS/SAÍDAS -->
+<div class="slide" id="slide-9">
+  <h2>Mapa de <span class="accent">Dependências</span> entre Fases</h2>
+  <p style="margin-bottom: 16px">
+    Cada saída alimenta a próxima fase. O encadeamento garante rastreabilidade
+    total.
+  </p>
+  <div
+    style="
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      font-size: 0.8rem;
+    "
+  >
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 0</strong><br />
+      <span style="color: #1e40af">Escopo + KPIs + Personas</span>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 1</strong><br />
+      <span style="color: #1e40af">Datasets + APIs + Metadados</span>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 2</strong><br />
+      <span style="color: #1e40af">Dados protegidos + RIPD + PETs</span>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 3</strong><br />
+      <span style="color: #1e40af">GenApp + Guard Rails + Testes</span>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 4</strong><br />
+      <span style="color: #1e40af">Entrega + Dashboards + Feedback</span>
+    </div>
+  </div>
+  <br />
+  <div class="grid-2">
+    <div class="card">
+      <h4>Dependências Diretas</h4>
+      <ul>
+        <li>Fase 1 depende de: Escopo + Personas (Fase 0)</li>
+        <li>Fase 2 depende de: Datasets + APIs (Fase 1)</li>
+        <li>Fase 3 depende de: Dados protegidos + Ética (Fase 2)</li>
+        <li>Fase 4 depende de: GenApp validada (Fase 3)</li>
+        <li>Feedback depende de: Métricas (Fase 4) + KPIs (Fase 0)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Entradas Transversais (todas as fases)</h4>
+      <ul>
+        <li>Legislação vigente (LGPD, Marco Legal IA)</li>
+        <li>Políticas internas do órgão</li>
+        <li>Orçamento aprovado</li>
+        <li>Equipe alocada e capacitada</li>
+        <li>Infraestrutura de TI disponível</li>
+        <li>Governança e comitê de ética ativo</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">9 / 18</div>
+</div>
+
+<!-- SLIDE 10: ATORES E RESPONSABILIDADES -->
+<div class="slide" id="slide-10">
+  <h2>Atores — <span class="accent">Quem fornece as Entradas</span></h2>
+  <div class="grid-3">
+    <div class="card">
+      <h4>🏛️ Gestor Público (fornece)</h4>
+      <ul>
+        <li>Demanda formal e briefing</li>
+        <li>Acesso às bases de dados</li>
+        <li>Orçamento e prazo</li>
+        <li>Validação de Personas</li>
+        <li>Aprovação de escopo e KPIs</li>
+        <li>Templates de comunicação</li>
+        <li>Decisões de ajuste no feedback</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>⚙️ Núcleos CPQD (fornecem)</h4>
+      <ul>
+        <li>Expertise técnica por fase</li>
+        <li>Ferramentas e plataformas</li>
+        <li>Metodologias (fairness, PETs, etc.)</li>
+        <li>Documentação técnica</li>
+        <li>Testes e validações</li>
+        <li>Relatórios de qualidade</li>
+        <li>Suporte operacional contínuo</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>👤 Cidadão (fornece)</h4>
+      <ul>
+        <li>Dados cadastrais (via bases gov)</li>
+        <li>Feedback de uso (NPS, reclamações)</li>
+        <li>Comportamento de engajamento</li>
+        <li>Validação implícita (adesão à política)</li>
+        <li>Sinais de satisfação/insatisfação</li>
+      </ul>
+    </div>
+  </div>
+  <br />
+  <div class="card" style="border-left: 3px solid #3b82f6">
+    <h4 style="color: #1d4ed8">Regra de Ouro</h4>
+    <p>
+      Nenhuma fase inicia sem que o responsável pelas entradas tenha entregue e
+      validado os artefatos necessários. O Gestor é o gatekeeper entre fases.
+    </p>
+  </div>
+  <div class="slide-number">10 / 18</div>
+</div>
+
+<!-- SLIDE 11: GUARD RAILS — ENTRADAS -->
+<div class="slide" id="slide-11">
+  <h2>Guard Rails — <span class="warn">Entradas para Configuração</span></h2>
+  <div class="grid-2">
+    <div class="input-box">
+      <h4>📥 O que é necessário para configurar Guard Rails</h4>
+      <ul>
+        <li>
+          Escopo exato da política pública (o que a GenApp PODE responder)
+        </li>
+        <li>Lista de temas proibidos (o que NÃO pode responder)</li>
+        <li>Base de conhecimento oficial (fonte de verdade)</li>
+        <li>Exemplos de respostas corretas e incorretas</li>
+        <li>Limites de dados pessoais (o que nunca expor)</li>
+        <li>Regras de tom e linguagem (formal, acessível, técnico)</li>
+        <li>Critérios de escalação para humano</li>
+        <li>Thresholds de confiança (quando bloquear resposta)</li>
+      </ul>
+    </div>
+    <div>
+      <div class="output-box" style="margin-bottom: 16px">
+        <h4>📤 Guard Rails Configurados</h4>
+        <ul>
+          <li>Filtro de conteúdo (escopo)</li>
+          <li>Filtro de privacidade (dados pessoais)</li>
+          <li>Filtro de viés (fairness)</li>
+          <li>Filtro de segurança (prompt injection)</li>
+          <li>Filtro de auditoria (logging)</li>
+          <li>Regra de escalação humana</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left: 3px solid #d97706">
+        <h4 style="color: #d97706">Princípio</h4>
+        <p>
+          Guard Rails sem entradas claras geram falsos positivos (bloqueia
+          demais) ou falsos negativos (deixa passar). A qualidade do Guard Rail
+          é proporcional à clareza das entradas.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">11 / 18</div>
+</div>
+
+<!-- SLIDE 12: ARQUITETURA COM ENTRADAS -->
+<div class="slide" id="slide-12">
+  <h2>Arquitetura — <span class="accent">Entradas por Camada</span></h2>
+  <div class="grid-2">
+    <div>
+      <div class="input-box" style="margin-bottom: 12px">
+        <h4>▸ Camada de Ingestão</h4>
+        <p>
+          Entradas: Bases governamentais, registros civis, dados
+          socioeconômicos, credenciais de acesso, contratos de dados
+        </p>
+      </div>
+      <div class="input-box" style="margin-bottom: 12px">
+        <h4>▸ Camada de Processamento</h4>
+        <p>
+          Entradas: Dados brutos ingeridos, regras de limpeza, dicionário de
+          dados, requisitos de qualidade, políticas de retenção
+        </p>
+      </div>
+      <div class="input-box" style="margin-bottom: 12px">
+        <h4>▸ Camada de Inteligência</h4>
+        <p>
+          Entradas: Datasets limpos, prompts de domínio, base de conhecimento,
+          Guard Rails, casos de teste, Model Cards
+        </p>
+      </div>
+      <div class="input-box">
+        <h4>▸ Camada de Entrega</h4>
+        <p>
+          Entradas: GenApp pronta, Personas segmentadas, templates de mensagem,
+          configuração de canais, regras de frequência
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="output-box" style="margin-bottom: 12px">
+        <h4>▸ Saída: Ingestão</h4>
+        <p>Data Lakehouse populado, dados brutos catalogados</p>
+      </div>
+      <div class="output-box" style="margin-bottom: 12px">
+        <h4>▸ Saída: Processamento</h4>
+        <p>Datasets limpos, APIs documentadas, metadados</p>
+      </div>
+      <div class="output-box" style="margin-bottom: 12px">
+        <h4>▸ Saída: Inteligência</h4>
+        <p>GenApp funcionando, respostas validadas, Guard Rails ativos</p>
+      </div>
+      <div class="output-box">
+        <h4>▸ Saída: Entrega</h4>
+        <p>Cidadão atendido, dashboards, métricas de engajamento</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">12 / 18</div>
+</div>
+
+<!-- SLIDE 13: CHECKLIST DE ENTRADAS POR FASE -->
+<div class="slide" id="slide-13">
+  <h2>Checklist de <span class="accent">Entradas Obrigatórias</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3 style="color: #7c3aed">Fase 0 — Design</h3>
+      <ul>
+        <li>☐ Demanda formal do Gestor</li>
+        <li>☐ Descrição do problema público</li>
+        <li>☐ Público-alvo identificado</li>
+        <li>☐ Orçamento disponível</li>
+        <li>☐ Prazo desejado</li>
+        <li>☐ Dados existentes sobre o problema</li>
+        <li>☐ Legislação aplicável mapeada</li>
+        <li>☐ Stakeholders identificados</li>
+      </ul>
+      <br />
+      <h3 style="color: #0891b2">Fase 1 — Dados</h3>
+      <ul>
+        <li>☐ Escopo aprovado (Fase 0)</li>
+        <li>☐ Acesso às bases de dados</li>
+        <li>☐ Credenciais e autorizações</li>
+        <li>☐ Dicionário de dados</li>
+        <li>☐ Regras de cruzamento</li>
+        <li>☐ Requisitos de qualidade</li>
+        <li>☐ Padrões de interoperabilidade</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color: #db2777">Fase 2 — Ética</h3>
+      <ul>
+        <li>☐ Datasets consolidados (Fase 1)</li>
+        <li>☐ APIs documentadas (Fase 1)</li>
+        <li>☐ Legislação (LGPD, Marco IA)</li>
+        <li>☐ Política de privacidade</li>
+        <li>☐ Template RIPD</li>
+        <li>☐ Critérios de fairness</li>
+        <li>☐ Arquitetura técnica proposta</li>
+      </ul>
+      <br />
+      <h3 style="color: #059669">Fase 3 — GenApp</h3>
+      <ul>
+        <li>☐ APIs seguras (Fase 1+2)</li>
+        <li>☐ Model Cards (Fase 2)</li>
+        <li>☐ Regras de Guard Rails</li>
+        <li>☐ Base de conhecimento oficial</li>
+        <li>☐ Casos de teste com Personas</li>
+        <li>☐ Critérios de qualidade de resposta</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">13 / 18</div>
+</div>
+
+<!-- SLIDE 14: MÉTRICAS -->
+<div class="slide" id="slide-14">
+  <h2>Métricas — <span class="accent">Entradas para Medição</span></h2>
+  <div class="grid-2">
+    <div class="input-box">
+      <h4>📥 O que é necessário para medir</h4>
+      <ul>
+        <li>KPIs definidos na Fase 0 (baseline)</li>
+        <li>Instrumentação de telemetria na GenApp</li>
+        <li>Integração com plataforma de analytics</li>
+        <li>Configuração de dashboards (META7)</li>
+        <li>Definição de alertas e thresholds</li>
+        <li>Canal de feedback do cidadão (NPS, formulário)</li>
+        <li>Acesso a dados de mídia (clipping)</li>
+        <li>Periodicidade de revisão definida</li>
+      </ul>
+    </div>
+    <div>
+      <div class="output-box" style="margin-bottom: 16px">
+        <h4>📤 Métricas Produzidas</h4>
+        <ul>
+          <li>Taxa de adesão à política pública</li>
+          <li>Custo por cidadão atendido</li>
+          <li>Tempo médio de resolução</li>
+          <li>NPS do cidadão</li>
+          <li>Taxa de abertura e engajamento</li>
+          <li>Score de fairness contínuo</li>
+          <li>Guard Rail trigger rate</li>
+          <li>ROI vs. processo manual</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Sem entradas de medição → sem feedback</h4>
+        <p>
+          Se a instrumentação não for planejada desde a Fase 0, o ciclo de
+          feedback não funciona e o Gestor opera no escuro.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">14 / 18</div>
+</div>
+
+<!-- SLIDE 15: LINHA DO TEMPO -->
+<div class="slide" id="slide-15">
+  <h2>
+    Linha do Tempo —
+    <span class="accent">Quando cada Entrada é necessária</span>
+  </h2>
+  <div
+    style="
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    "
+  >
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 0</strong>
+      <p style="font-size: 1.6rem; color: #1e293b; margin: 6px 0">4-6 sem</p>
+      <div class="divider"></div>
+      <p style="font-size: 0.75rem; color: #1e40af">
+        Entradas: Demanda + Problema + Orçamento + Legislação
+      </p>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 1</strong>
+      <p style="font-size: 1.6rem; color: #1e293b; margin: 6px 0">6-10 sem</p>
+      <div class="divider"></div>
+      <p style="font-size: 0.75rem; color: #1e40af">
+        Entradas: Escopo + Acesso bases + Credenciais + Dicionário
+      </p>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 2</strong>
+      <p style="font-size: 1.6rem; color: #1e293b; margin: 6px 0">3-5 sem</p>
+      <div class="divider"></div>
+      <p style="font-size: 0.75rem; color: #1e40af">
+        Entradas: Datasets + LGPD + RIPD + Fairness criteria
+      </p>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 3</strong>
+      <p style="font-size: 1.6rem; color: #1e293b; margin: 6px 0">8-12 sem</p>
+      <div class="divider"></div>
+      <p style="font-size: 0.75rem; color: #1e40af">
+        Entradas: APIs + Guard Rails + Base conhecimento + Testes
+      </p>
+    </div>
+    <div
+      style="
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+      "
+    >
+      <strong style="color: #1d4ed8">Fase 4</strong>
+      <p style="font-size: 1.6rem; color: #1e293b; margin: 6px 0">4-6 sem</p>
+      <div class="divider"></div>
+      <p style="font-size: 0.75rem; color: #1e40af">
+        Entradas: GenApp + Templates + Canais + Plano rollout
+      </p>
+    </div>
+  </div>
+  <br />
+  <div class="card" style="text-align: center">
+    <p style="font-size: 1.1rem; color: #1e293b">
+      Total:
+      <span class="accent" style="font-size: 1.4rem; font-weight: 700"
+        >25 a 39 semanas</span
+      >
+      (6 a 9 meses)
+    </p>
+    <p style="margin-top: 6px; font-size: 0.9rem">
+      ⚠️ Atrasos nas entradas são a principal causa de atraso no cronograma.
+      Planeje a coleta de entradas com antecedência.
+    </p>
+  </div>
+  <div class="slide-number">15 / 18</div>
+</div>
+
+<!-- SLIDE 16: RISCOS DE ENTRADAS -->
+<div class="slide" id="slide-16">
+  <h2>Riscos — <span class="warn">Entradas Ausentes ou Incompletas</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3>O que acontece sem entradas adequadas</h3>
+      <ul>
+        <li>
+          Fase 0 sem briefing claro → escopo vago → retrabalho em todas as fases
+        </li>
+        <li>
+          Fase 1 sem acesso a bases → dados incompletos → GenApp com lacunas
+        </li>
+        <li>
+          Fase 2 sem legislação mapeada → risco jurídico → bloqueio em produção
+        </li>
+        <li>
+          Fase 3 sem base de conhecimento → GenApp alucina → cidadão
+          desinformado
+        </li>
+        <li>
+          Fase 4 sem templates aprovados → comunicação genérica → baixo
+          engajamento
+        </li>
+        <li>
+          Feedback sem KPIs → impossível medir sucesso → projeto sem direção
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3>Mitigações</h3>
+      <ul>
+        <li>Checklist obrigatório de entradas antes de cada fase</li>
+        <li>Gate review com Gestor entre fases</li>
+        <li>Prazo de coleta de entradas no cronograma</li>
+        <li>Responsável nomeado para cada entrada</li>
+        <li>Fallback: entradas mínimas vs. ideais (MVP)</li>
+        <li>Escalação automática se entrada atrasa > 1 semana</li>
+      </ul>
+      <br />
+      <div class="card" style="border-left: 3px solid #dc2626">
+        <h4 style="color: #dc2626">Regra</h4>
+        <p>
+          Nenhuma fase avança com entradas classificadas como "pendente". O
+          status é binário: entregue e validado, ou não entregue.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">16 / 18</div>
+</div>
+
+<!-- SLIDE 17: RESUMO VISUAL -->
+<div class="slide" id="slide-17">
+  <h2>Resumo — <span class="accent">Entradas Críticas por Fase</span></h2>
+  <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; font-size: 0.9rem;">
+    <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 14px;">
+      <strong style="color: #7c3aed;">Fase 0</strong>
+    </div>
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px;">
+      <span style="color: #1d4ed8;">Demanda formal • Problema descrito • Público-alvo • Orçamento • Prazo • Legislação • Stakeholders</span>
+    </div>
+    <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 14px;">
+      <strong style="color: #7c3aed;">Fase 1</strong>
+    </div>
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px;">
+      <span style="color: #1d4ed8;">Escopo aprovado • Acesso bases • Credenciais • Dicionário dados • Regras cruzamento • Padrões interop</span>
+    </div>
+    <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 14px;">
+      <strong style="color: #7c3aed;">Fase 2</strong>
+    </div>
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px;">
+      <span style="color: #1d4ed8;">Datasets • APIs • LGPD/Marco IA • Política privacidade • RIPD • Critérios fairness • Arquitetura</span>
+    </div>
+    <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 14px;">
+      <strong style="color: #7c3aed;">Fase 3</strong>
+    </div>
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px;">
+      <span style="color: #1d4ed8;">APIs seguras • Model Cards • Guard Rails • Base conhecimento • Casos teste • Critérios qualidade</span>
+    </div>
+    <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 14px;">
+      <strong style="color: #7c3aed;">Fase 4</strong>
+    </div>
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px;">
+      <span style="color: #1d4ed8;">GenApp pronta • Personas segmentadas • Templates mensagem • Canais config • Plano rollout • KPIs engajamento</span>
+    </div>
+  </div>
+  <br/>
+  <div class="card" style="text-align: center;">
+    <h4>Total de entradas mapeadas: ~50 artefatos</h4>
+    <p>Cada entrada tem um responsável, um prazo e um critério de aceite. A governança garante que nada avança sem validação.</p>
+  </div>
+  <div class="slide-number">17 / 18</div>
+</div>
+
+<!-- SLIDE 18: PRÓXIMOS PASSOS -->
+<div class="slide" id="slide-18">
+  <h2>Próximos Passos</h2>
+  <div class="grid-2">
+    <div>
+      <p style="font-size: 1.2rem; color: #1e293b; line-height: 1.6;">Com as entradas mapeadas, o processo se torna <span class="highlight">previsível, auditável e replicável</span> para qualquer política pública.</p>
+      <br/>
+      <h3>Para iniciar com sucesso</h3>
+      <ul>
+        <li>Validar checklist de entradas da Fase 0 com o Gestor</li>
+        <li>Nomear responsável por cada entrada</li>
+        <li>Incluir prazo de coleta de entradas no cronograma</li>
+        <li>Criar gate review entre fases (go/no-go)</li>
+        <li>Documentar entradas mínimas vs. ideais (MVP path)</li>
+        <li>Estabelecer escalação para entradas atrasadas</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="background: linear-gradient(135deg, #ecfeff, #f0f9ff);">
+        <h4 style="color: #0e7490; font-size: 1.05rem;">Resumo do Fluxo Completo</h4>
+        <br/>
+        <p style="color: #1d4ed8;">📥 Entradas → ⚙️ Processo → 📤 Saídas</p>
+        <br/>
+        <p style="color: #7c3aed;">0. Demanda → Design → Escopo + KPIs</p>
+        <br/>
+        <p style="color: #0891b2;">1. Acesso + Regras → Eng. Dados → Datasets + APIs</p>
+        <br/>
+        <p style="color: #db2777;">2. Legislação + Dados → Ética → Proteção + Fairness</p>
+        <br/>
+        <p style="color: #059669;">3. APIs + Knowledge → Fábrica → GenApp</p>
+        <br/>
+        <p style="color: #d97706;">4. GenApp + Canais → Entrega → Cidadão atendido</p>
+        <br/>
+        <p style="color: #1e293b;">🔄 Métricas + KPIs → Feedback → Ajuste contínuo</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">18 / 18</div>
+</div>
+
+<!-- NAVEGAÇÃO -->
+<div class="nav">
+    <button onclick="prevSlide()">← Anterior</button>
+    <button onclick="nextSlide()">Próximo →</button>
+</div>
+
+<script>
+    let current = 1;
+    const total = 18;
+
+    function showSlide(n) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById('slide-' + n).classList.add('active');
+        current = n;
+    }
+
+    function nextSlide() {
+        if (current < total) showSlide(current + 1);
+    }
+
+    function prevSlide() {
+        if (current > 1) showSlide(current - 1);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+    });
+</script>
+</body>
+</html>

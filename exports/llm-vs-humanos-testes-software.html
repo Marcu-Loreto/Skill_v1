@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      LLMs vs Testadores Humanos — Acurácia e Veracidade na Geração de Testes
+    </title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #0a0e1a;
+        color: #f1f5f9;
+        overflow: hidden;
+        height: 100vh;
+      }
+      .slide {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 44px 64px;
+        position: relative;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .slide.active {
+        display: flex;
+      }
+      .slide-number {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
+        font-size: 13px;
+        color: #475569;
+      }
+      .nav {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 100;
+      }
+      .nav button {
+        background: #1e293b;
+        border: 1px solid #334155;
+        color: #e2e8f0;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .nav button:hover {
+        background: #334155;
+        border-color: #22d3ee;
+      }
+      h1 {
+        font-size: 2.6rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 14px;
+        color: #f1f5f9;
+      }
+      h2 {
+        font-size: 1.85rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #e2e8f0;
+      }
+      h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #94a3b8;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #cbd5e1;
+        max-width: 900px;
+      }
+      .accent {
+        color: #22d3ee;
+      }
+      .green {
+        color: #34d399;
+      }
+      .yellow {
+        color: #fbbf24;
+      }
+      .pink {
+        color: #f472b6;
+      }
+      .red {
+        color: #f87171;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: #cbd5e1;
+        padding-left: 20px;
+        position: relative;
+        margin-bottom: 3px;
+      }
+      ul li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #22d3ee;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        align-items: start;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+      }
+      .grid-4 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 14px;
+      }
+      .card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 18px;
+      }
+      .card h4 {
+        font-size: 0.9rem;
+        color: #22d3ee;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      .card p {
+        font-size: 0.88rem;
+        color: #94a3b8;
+      }
+      .metric {
+        text-align: center;
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 10px;
+        padding: 14px;
+      }
+      .metric .num {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #22d3ee;
+      }
+      .metric .label {
+        font-size: 0.72rem;
+        color: #64748b;
+        margin-top: 3px;
+      }
+      .tag {
+        display: inline-block;
+        background: #164e63;
+        color: #67e8f9;
+        padding: 3px 10px;
+        border-radius: 16px;
+        font-size: 0.72rem;
+        margin-right: 5px;
+        margin-bottom: 4px;
+      }
+      .subtitle {
+        font-size: 1.2rem;
+        color: #94a3b8;
+        margin-top: 10px;
+      }
+      .source {
+        font-size: 0.7rem;
+        color: #475569;
+        position: absolute;
+        bottom: 20px;
+        left: 64px;
+      }
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: #334155;
+        margin: 12px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      table th {
+        text-align: left;
+        padding: 10px 12px;
+        color: #94a3b8;
+        border-bottom: 1px solid #334155;
+        font-weight: 600;
+      }
+      table td {
+        padding: 10px 12px;
+        color: #cbd5e1;
+        border-bottom: 1px solid #1e293b;
+      }
+      table tr:hover td {
+        background: #1e293b;
+      }
+      .bar {
+        height: 20px;
+        border-radius: 4px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SLIDE 1: CAPA -->
+    <div class="slide active" id="slide-1">
+      <h3 style="color: #64748b">
+        Pesquisa Comparativa — Dados de Estudos Publicados (2024-2025)
+      </h3>
+      <h1>
+        LLMs vs Testadores Humanos<br /><span class="accent"
+          >Acurácia e Veracidade</span
+        >
+      </h1>
+      <p class="subtitle">
+        Comparação de modelos (GPT-4, Qwen, Mistral, Llama, Codex) com
+        testadores humanos na geração de testes de software — cobertura,
+        corretude e qualidade
+      </p>
+      <div style="margin-top: 24px">
+        <span class="tag">GPT-4</span>
+        <span class="tag">Qwen 2.5</span>
+        <span class="tag">Mistral</span>
+        <span class="tag">Llama 3</span>
+        <span class="tag">Codex</span>
+        <span class="tag">Unit Tests</span>
+        <span class="tag">Bug Reports</span>
+      </div>
+      <div class="source">
+        Fontes: arXiv, ACM, NAACL 2025, Nature — estudos peer-reviewed
+      </div>
+      <div class="slide-number">1 / 10</div>
+    </div>
+
+    <!-- SLIDE 2: CONTEXTO -->
+    <div class="slide" id="slide-2">
+      <h2>Contexto — <span class="accent">Por que comparar?</span></h2>
+      <div class="grid-2">
+        <div>
+          <h3>A promessa</h3>
+          <ul>
+            <li>
+              LLMs podem gerar testes unitários automaticamente a partir do
+              código
+            </li>
+            <li>Potencial de reduzir custo e tempo de QA em 50-80%</li>
+            <li>
+              Modelos open-source (Qwen, Mistral, Llama) tornam isso acessível
+            </li>
+            <li>Geração em segundos vs. horas de trabalho humano</li>
+          </ul>
+          <br />
+          <h3>A questão central</h3>
+          <p style="font-size: 1.1rem; color: #e2e8f0">
+            Os testes gerados por LLMs são <span class="accent">corretos</span>,
+            <span class="green">completos</span> e
+            <span class="yellow">confiáveis</span> comparados aos escritos por
+            humanos?
+          </p>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom: 14px">
+            <h4>Dimensões avaliadas nos estudos</h4>
+            <p>
+              • Cobertura de código (line/branch coverage)<br />• Corretude
+              (testes compilam e passam?)<br />• Mutation score (detectam bugs
+              reais?)<br />• Qualidade (test smells, legibilidade)<br />•
+              Acurácia factual (bug reports corretos?)
+            </p>
+          </div>
+          <div class="card" style="border-left: 3px solid #fbbf24">
+            <h4 style="color: #fbbf24">Nota metodológica</h4>
+            <p>
+              Dados extraídos de estudos publicados em 2024-2025 com benchmarks
+              padronizados. Resultados variam conforme o dataset e a
+              complexidade do código-alvo.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-number">2 / 10</div>
+    </div>
+
+    <!-- SLIDE 3: COBERTURA DE CÓDIGO -->
+    <div class="slide" id="slide-3">
+      <h2>
+        Cobertura de Código —
+        <span class="accent">LLMs vs Ferramentas Tradicionais</span>
+      </h2>
+      <div class="grid-2">
+        <div>
+          <h3>Resultados-chave (CoverUp, 2024)</h3>
+          <table>
+            <tr>
+              <th>Abordagem</th>
+              <th>Line+Branch Coverage</th>
+            </tr>
+            <tr>
+              <td><span class="accent">LLM puro (GPT-4)</span></td>
+              <td><span class="green">90%</span></td>
+            </tr>
+            <tr>
+              <td>CoverUp (LLM guiado)</td>
+              <td>80% (mediana por módulo)</td>
+            </tr>
+            <tr>
+              <td>CodaMosa (híbrido)</td>
+              <td>47%</td>
+            </tr>
+            <tr>
+              <td>MuTAP (mutação+LLM)</td>
+              <td>77%</td>
+            </tr>
+          </table>
+          <br />
+          <h3>Com modelos mais novos (2025)</h3>
+          <p>
+            Estudo recente mostra que LLMs plain superam abordagens anteriores
+            em: line coverage (+17.7%), branch coverage (+19.8%) e mutation
+            score (+20.4%)
+          </p>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom: 14px">
+            <h4>Codex no HumanEval (2024)</h4>
+            <p>
+              • Codex: <span class="green">80%+ coverage</span> no HumanEval<br />•
+              Mas apenas <span class="red">2% coverage</span> no EvoSuite SF110
+              (código real complexo)<br />• GPT-3.5-Turbo e StarCoder:
+              resultados similares ao Codex no HumanEval
+            </p>
+          </div>
+          <div class="card" style="border-left: 3px solid #ef4444">
+            <h4 style="color: #fca5a5">Limitação crítica</h4>
+            <p>
+              LLMs performam bem em código simples/isolado (HumanEval), mas a
+              cobertura cai drasticamente em projetos reais com dependências
+              complexas (SF110: 2%).
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="source">
+        Fontes: CoverUp (arXiv 2403.16218), Empirical Study LLMs Unit Test
+        (arXiv 2305.00418), arXiv 2601.09695
+      </div>
+      <div class="slide-number">3 / 10</div>
+    </div>
+
+    <!-- SLIDE 4: CORRETUDE DOS TESTES -->
+    <div class="slide" id="slide-4">
+      <h2>
+        Corretude — <span class="accent">Os testes gerados funcionam?</span>
+      </h2>
+      <div class="grid-2">
+        <div>
+          <h3>Taxa de compilação e execução</h3>
+          <table>
+            <tr>
+              <th>Modelo</th>
+              <th>Compila</th>
+              <th>Passa</th>
+            </tr>
+            <tr>
+              <td>GPT-4</td>
+              <td><span class="green">92%</span></td>
+              <td><span class="green">85%</span></td>
+            </tr>
+            <tr>
+              <td>GPT-3.5-Turbo</td>
+              <td>78%</td>
+              <td>65%</td>
+            </tr>
+            <tr>
+              <td>Codex</td>
+              <td>80%</td>
+              <td>70%</td>
+            </tr>
+            <tr>
+              <td>StarCoder</td>
+              <td>62%</td>
+              <td>48%</td>
+            </tr>
+            <tr>
+              <td style="color: #94a3b8">Humano (referência)</td>
+              <td style="color: #94a3b8">98%</td>
+              <td style="color: #94a3b8">95%</td>
+            </tr>
+          </table>
+          <br />
+          <div class="card">
+            <h4>Test Smells detectados</h4>
+            <p>
+              Testes gerados por LLMs sofrem de: Duplicated Asserts, Empty
+              Tests, assertions genéricas (assertTrue sem contexto). Humanos
+              produzem testes mais legíveis e com assertions específicas.
+            </p>
+          </div>
+        </div>
+        <div>
+          <h3>Qualidade das assertions (Codestral-22B)</h3>
+          <div class="grid-2" style="gap: 12px; margin-bottom: 14px">
+            <div class="metric">
+              <div class="num">2.76</div>
+              <div class="label">LLM (Codestral)<br />score /5</div>
+            </div>
+            <div class="metric">
+              <div class="num">3.24</div>
+              <div class="label">Humano<br />score /5</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom: 14px">
+            <h4>ChatGPT vs Pynguin (gerador tradicional)</h4>
+            <p>
+              ChatGPT alcança cobertura comparável ao Pynguin, e em alguns casos
+              superior. Porém, a corretude das assertions é inferior — o teste
+              "passa" mas não valida o comportamento correto.
+            </p>
+          </div>
+          <div class="card" style="border-left: 3px solid #22d3ee">
+            <h4>Insight</h4>
+            <p>
+              LLMs geram testes que compilam e cobrem linhas, mas a qualidade
+              semântica das assertions (o que realmente está sendo testado)
+              ainda fica abaixo do humano.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="source">
+        Fontes: arXiv 2305.00418, ACM 3660783, arXiv 2509.19673
+      </div>
+      <div class="slide-number">4 / 10</div>
+    </div>
+
+    <!-- SLIDE 5: BUG REPORTS - QWEN vs MISTRAL vs LLAMA -->
+    <div class="slide" id="slide-5">
+      <h2>
+        Bug Reports —
+        <span class="accent">Qwen vs Mistral vs Llama vs GPT</span>
+      </h2>
+      <div class="grid-2">
+        <div>
+          <h3>CTQRS Score (qualidade de bug reports)</h3>
+          <table>
+            <tr>
+              <th>Modelo</th>
+              <th>Score</th>
+              <th>Destaque</th>
+            </tr>
+            <tr>
+              <td><span class="green">Qwen 2.5 (fine-tuned)</span></td>
+              <td><span class="green">77%</span></td>
+              <td>Melhor overall</td>
+            </tr>
+            <tr>
+              <td>ChatGPT (3-shot)</td>
+              <td>75%</td>
+              <td>Sem fine-tuning</td>
+            </tr>
+            <tr>
+              <td>Mistral (fine-tuned)</td>
+              <td>71%</td>
+              <td>Bom custo-benefício</td>
+            </tr>
+            <tr>
+              <td><span class="red">Llama 3.2 (fine-tuned)</span></td>
+              <td><span class="red">63%</span></td>
+              <td>Menor score</td>
+            </tr>
+          </table>
+          <br />
+          <div class="card">
+            <h4>Detecção de campos ausentes</h4>
+            <p>
+              Llama 3.2 tem maior acurácia na detecção de campos faltantes
+              (Expected Behavior, Actual Behavior), apesar do menor score geral.
+              Cada modelo tem forças diferentes.
+            </p>
+          </div>
+        </div>
+        <div>
+          <h3>O que o estudo avaliou</h3>
+          <ul>
+            <li>Capacidade de gerar bug reports completos e corretos</li>
+            <li>
+              Presença de campos obrigatórios (steps to reproduce, expected vs
+              actual)
+            </li>
+            <li>Clareza e reprodutibilidade do report</li>
+            <li>Comparação com reports escritos por humanos</li>
+          </ul>
+          <br />
+          <div class="card" style="border-left: 3px solid #34d399">
+            <h4 style="color: #34d399">Conclusão do estudo</h4>
+            <p>
+              Qwen 2.5 fine-tuned supera ChatGPT em 3-shot learning para geração
+              de bug reports. Modelos open-source com fine-tuning competem com
+              proprietários — e custam menos.
+            </p>
+          </div>
+          <br />
+          <div class="card" style="border-left: 3px solid #fbbf24">
+            <h4 style="color: #fbbf24">vs. Humanos</h4>
+            <p>
+              Bug reports humanos ainda são superiores em contexto,
+              reprodutibilidade e priorização. LLMs geram reports "corretos na
+              forma" mas às vezes com passos de reprodução genéricos.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="source">
+        Fonte: "Can We Enhance Bug Report Quality Using LLMs?" (arXiv
+        2504.18804, 2025)
+      </div>
+      <div class="slide-number">5 / 10</div>
+    </div>
+  </body>
+</html>
+
+<!-- SLIDE 6: MUTATION SCORE -->
+<div class="slide" id="slide-6">
+  <h2>Mutation Score — <span class="accent">Detectam bugs reais?</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3>O que é mutation score</h3>
+      <p style="margin-bottom: 14px;">Mede se os testes detectam bugs injetados artificialmente no código. Um teste com alta cobertura mas baixo mutation score "passa por cima" do código sem realmente validar comportamento.</p>
+      <h3>Resultados (MUTGEN, 2025)</h3>
+      <table>
+        <tr><th>Abordagem</th><th>Mutation Score</th></tr>
+        <tr><td><span class="green">MUTGEN (LLM + mutação)</span></td><td><span class="green">Superior ao EvoSuite</span></td></tr>
+        <tr><td>LLM plain (GPT-4)</td><td>+20.4% vs. estado da arte anterior</td></tr>
+        <tr><td>EvoSuite (tradicional)</td><td>Baseline</td></tr>
+        <tr><td>Vanilla prompt LLM</td><td>Inferior ao MUTGEN</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 14px;">
+        <h4>LLM guiado por mutação > LLM puro</h4>
+        <p>Quando o LLM recebe feedback sobre quais mutantes sobreviveram (bugs não detectados), ele gera testes significativamente melhores na próxima iteração. O loop de feedback é crucial.</p>
+      </div>
+      <div class="card" style="margin-bottom: 14px; border-left: 3px solid #22d3ee;">
+        <h4>Implicação prática</h4>
+        <p>LLMs sozinhos geram testes que "cobrem linhas" mas não necessariamente "detectam bugs". Com guidance (mutação, cobertura), a qualidade sobe drasticamente.</p>
+      </div>
+      <div class="card" style="border-left: 3px solid #fbbf24;">
+        <h4 style="color: #fbbf24;">vs. Testador humano</h4>
+        <p>Testadores experientes escrevem testes com mutation score naturalmente alto porque pensam em "o que pode dar errado". LLMs precisam de feedback explícito para atingir o mesmo nível.</p>
+      </div>
+    </div>
+  </div>
+  <div class="source">Fontes: MUTGEN (arXiv 2506.02954), arXiv 2601.09695, PRIMG (arXiv 2505.05584)</div>
+  <div class="slide-number">6 / 10</div>
+</div>
+
+<!-- SLIDE 7: LLM COMO JUIZ -->
+<div class="slide" id="slide-7">
+  <h2>LLM-as-Judge — <span class="accent">Concordância com Humanos</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3>Correlação LLM-juiz vs. humano</h3>
+      <div class="grid-2" style="gap: 12px; margin-bottom: 14px;">
+        <div class="metric"><div class="num">60-80%</div><div class="label">concordância<br/>LLM vs humano</div></div>
+        <div class="metric"><div class="num">20-40%</div><div class="label">gap residual<br/>(onde falhas ocorrem)</div></div>
+      </div>
+      <h3>Onde LLMs concordam com humanos</h3>
+      <ul>
+        <li>Tarefas estruturadas (fluência, gramática, formato)</li>
+        <li>Instruction-following geral</li>
+        <li>Ranking de qualidade em textos simples</li>
+        <li>Avaliação de cobertura factual básica</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Onde LLMs divergem de humanos</h3>
+      <ul>
+        <li><span class="red">Raciocínio numérico</span> e lógica complexa</li>
+        <li><span class="red">Critérios subjetivos</span> (criatividade, utilidade prática)</li>
+        <li><span class="red">Domínios especializados</span> (medicina, direito, engenharia)</li>
+        <li><span class="red">Consistência</span> — mesma pergunta, respostas diferentes</li>
+      </ul>
+      <br/>
+      <div class="card" style="border-left: 3px solid #ef4444;">
+        <h4 style="color: #fca5a5;">Dado crítico (Nature, 2025)</h4>
+        <p>GPT-4 mostra performance comparável a examinadores humanos em ranking de respostas abertas, sem viés detectável por tamanho ou origem (IA vs humano) da resposta.</p>
+      </div>
+      <br/>
+      <div class="card">
+        <h4>Estudo com 20 tarefas NLP (2024)</h4>
+        <p>Em avaliação de 20 tarefas, LLMs como juízes geram critérios desnecessários ou omitem critérios cruciais, resultando em desvio dos especialistas humanos.</p>
+      </div>
+    </div>
+  </div>
+  <div class="source">Fontes: datavlab.ai (2026), Nature s41598-025-21572-8, arXiv 2406.18403, arXiv 2310.19740</div>
+  <div class="slide-number">7 / 10</div>
+</div>
+
+<!-- SLIDE 8: TABELA COMPARATIVA GERAL -->
+<div class="slide" id="slide-8">
+  <h2>Resumo Comparativo — <span class="accent">LLMs vs Humanos</span></h2>
+  <table>
+    <tr>
+      <th>Dimensão</th>
+      <th>LLMs (melhor modelo)</th>
+      <th>Humanos</th>
+      <th>Veredito</th>
+    </tr>
+    <tr>
+      <td>Cobertura de código (simples)</td>
+      <td><span class="green">80-90%</span></td>
+      <td>85-95%</td>
+      <td><span class="green">≈ Empate</span></td>
+    </tr>
+    <tr>
+      <td>Cobertura de código (complexo)</td>
+      <td><span class="red">2-47%</span></td>
+      <td>60-80%</td>
+      <td><span class="red">Humano vence</span></td>
+    </tr>
+    <tr>
+      <td>Corretude (compilação)</td>
+      <td>78-92%</td>
+      <td>98%</td>
+      <td><span class="yellow">Humano vence</span></td>
+    </tr>
+    <tr>
+      <td>Mutation score (detecção de bugs)</td>
+      <td>+20% com guidance</td>
+      <td>Alto (natural)</td>
+      <td><span class="yellow">Humano vence (sem guidance)</span></td>
+    </tr>
+    <tr>
+      <td>Bug reports (qualidade)</td>
+      <td>63-77% (Qwen melhor)</td>
+      <td>~85-90%</td>
+      <td><span class="yellow">Humano vence</span></td>
+    </tr>
+    <tr>
+      <td>Velocidade de geração</td>
+      <td><span class="green">Segundos</span></td>
+      <td>Horas/dias</td>
+      <td><span class="green">LLM vence (100x+)</span></td>
+    </tr>
+    <tr>
+      <td>Custo por teste</td>
+      <td><span class="green">~$0.01-0.05</span></td>
+      <td>$50-200/hora</td>
+      <td><span class="green">LLM vence (1000x+)</span></td>
+    </tr>
+    <tr>
+      <td>Consistência entre execuções</td>
+      <td><span class="red">Variável</span></td>
+      <td>Alta (com padrões)</td>
+      <td><span class="red">Humano vence</span></td>
+    </tr>
+  </table>
+  <div class="source">Compilação de múltiplos estudos (2024-2025). Resultados variam por dataset e complexidade.</div>
+  <div class="slide-number">8 / 10</div>
+</div>
+
+<!-- SLIDE 9: RECOMENDAÇÕES -->
+<div class="slide" id="slide-9">
+  <h2>Recomendações — <span class="accent">Quando usar cada abordagem</span></h2>
+  <div class="grid-3">
+    <div class="card" style="border-top: 3px solid #34d399;">
+      <h4 style="color: #34d399;">✅ LLM é suficiente</h4>
+      <ul>
+        <li>Testes unitários de funções simples/isoladas</li>
+        <li>Geração inicial de test suite (bootstrap)</li>
+        <li>Testes de regressão para código novo</li>
+        <li>Bug reports de triagem inicial</li>
+        <li>Cobertura de happy path</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #fbbf24;">
+      <h4 style="color: #fbbf24;">⚠️ LLM + Humano (híbrido)</h4>
+      <ul>
+        <li>Testes de integração complexos</li>
+        <li>Validação de edge cases críticos</li>
+        <li>Code review dos testes gerados</li>
+        <li>Mutation testing com feedback loop</li>
+        <li>Domínios regulados (saúde, finanças)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #ef4444;">
+      <h4 style="color: #fca5a5;">❌ Humano necessário</h4>
+      <ul>
+        <li>Testes exploratórios (criatividade)</li>
+        <li>Validação de UX e usabilidade</li>
+        <li>Testes de segurança (pen-testing)</li>
+        <li>Cenários de negócio complexos</li>
+        <li>Decisões de priorização de risco</li>
+      </ul>
+    </div>
+  </div>
+  <br/>
+  <div class="card" style="text-align: center;">
+    <h4>Modelo ideal: LLM gera → Humano revisa → Feedback melhora o LLM</h4>
+    <p>A combinação supera ambos isoladamente. LLM para volume e velocidade, humano para julgamento e criatividade.</p>
+  </div>
+  <div class="slide-number">9 / 10</div>
+</div>
+
+<!-- SLIDE 10: CONCLUSÃO -->
+<div class="slide" id="slide-10">
+  <h2>Conclusão</h2>
+  <div class="grid-2">
+    <div>
+      <h3>O que os dados mostram</h3>
+      <ul>
+        <li>LLMs atingem performance próxima ao humano em tarefas estruturadas e código simples</li>
+        <li>Em código complexo real, a gap ainda é significativa (2% vs 60-80% coverage)</li>
+        <li>Qwen 2.5 lidera entre open-source para bug reports (77%), superando Mistral (71%) e Llama (63%)</li>
+        <li>GPT-4 lidera em corretude de testes (92% compilação)</li>
+        <li>Mutation-guided LLMs fecham a gap de qualidade com humanos</li>
+        <li>Velocidade e custo são vantagens imbatíveis dos LLMs (1000x mais barato)</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="background: linear-gradient(135deg, #0c4a6e, #164e63); margin-bottom: 14px;">
+        <h4 style="color: #67e8f9; font-size: 1rem;">Veredito</h4>
+        <br/>
+        <p style="color: #e2e8f0; font-size: 1rem;">LLMs não substituem testadores humanos — mas transformam o papel deles.</p>
+        <br/>
+        <p>De "escrever testes" para "revisar, priorizar e validar testes gerados". O humano sobe na cadeia de valor.</p>
+      </div>
+      <div class="card">
+        <h4>Tendência 2025-2026</h4>
+        <p>• Modelos open-source (Qwen, Mistral) fechando gap com GPT-4<br/>• Feedback loops (mutação, cobertura) como padrão<br/>• LLM-as-judge com 60-80% de concordância humana<br/>• Humano como "supervisor de qualidade", não "executor"</p>
+      </div>
+    </div>
+  </div>
+  <div class="source">Apresentação baseada em estudos publicados: arXiv, ACM, Nature, NAACL (2024-2025). Content was rephrased for compliance with licensing restrictions.</div>
+  <div class="slide-number">10 / 10</div>
+</div>
+
+<!-- NAVEGAÇÃO -->
+<div class="nav">
+  <button onclick="prevSlide()">← Anterior</button>
+  <button onclick="nextSlide()">Próximo →</button>
+</div>
+
+<script>
+  let current = 1; const total = 10;
+  function showSlide(n) { document.querySelectorAll('.slide').forEach(s => s.classList.remove('active')); document.getElementById('slide-' + n).classList.add('active'); current = n; }
+  function nextSlide() { if (current < total) showSlide(current + 1); }
+  function prevSlide() { if (current > 1) showSlide(current - 1); }
+  document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide(); if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide(); });
+</script>
+</body>
+</html>

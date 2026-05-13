@@ -1,0 +1,66 @@
+[
+  {
+    "id": "dark-professional",
+    "name": "Dark Professional",
+    "description": "Tema escuro com acentos em ciano. Ideal para tech e inovação.",
+    "colors": {
+      "primary": "#22d3ee",
+      "secondary": "#0f172a",
+      "accent": "#818cf8",
+      "background": "#0f172a",
+      "text": "#f1f5f9"
+    },
+    "fonts": {
+      "title": "Segoe UI",
+      "body": "Segoe UI"
+    }
+  },
+  {
+    "id": "light-corporate",
+    "name": "Light Corporate",
+    "description": "Tema claro e limpo. Ideal para apresentações corporativas formais.",
+    "colors": {
+      "primary": "#0066CC",
+      "secondary": "#1e293b",
+      "accent": "#06b6d4",
+      "background": "#ffffff",
+      "text": "#1e293b"
+    },
+    "fonts": {
+      "title": "Arial",
+      "body": "Arial"
+    }
+  },
+  {
+    "id": "empresa-teste",
+    "name": "Empresa Teste",
+    "description": "Template de teste para validação",
+    "colors": {
+      "primary": "#0066CC",
+      "secondary": "#003366",
+      "accent": "#00AAFF",
+      "background": "#FFFFFF",
+      "text": "#1A1A1A"
+    },
+    "fonts": {
+      "title": "Montserrat",
+      "body": "Arial"
+    }
+  },
+  {
+    "id": "template-50anos",
+    "name": "Template 50anos",
+    "description": "template de slides comemorativo dos 50 anos",
+    "colors": {
+      "primary": "#0066CC",
+      "secondary": "#003366",
+      "accent": "#00AAFF",
+      "background": "#FFFFFF",
+      "text": "#1A1A1A"
+    },
+    "fonts": {
+      "title": "Arial",
+      "body": "Arial"
+    }
+  }
+]

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAG Avançado — Query Rewriting e Captura de Intenção</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #0f172a;
+        color: #f1f5f9;
+        overflow: hidden;
+        height: 100vh;
+      }
+      .slide {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 60px 80px;
+        position: relative;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .slide.active {
+        display: flex;
+      }
+      .slide-number {
+        position: absolute;
+        bottom: 30px;
+        right: 40px;
+        font-size: 14px;
+        color: #64748b;
+      }
+      .nav {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 100;
+      }
+      .nav button {
+        background: #1e293b;
+        border: 1px solid #334155;
+        color: #e2e8f0;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .nav button:hover {
+        background: #334155;
+        border-color: #06b6d4;
+      }
+      h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+      h2 {
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #e2e8f0;
+      }
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #94a3b8;
+        margin-bottom: 14px;
+      }
+      p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #cbd5e1;
+        max-width: 900px;
+      }
+      .accent {
+        color: #06b6d4;
+      }
+      .highlight {
+        color: #34d399;
+      }
+      .warn {
+        color: #fbbf24;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #cbd5e1;
+        padding-left: 24px;
+        position: relative;
+        margin-bottom: 6px;
+      }
+      ul li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #06b6d4;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+        align-items: start;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+      }
+      .card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 14px;
+        padding: 24px;
+      }
+      .card h4 {
+        font-size: 1rem;
+        color: #06b6d4;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+      .card p {
+        font-size: 0.95rem;
+        color: #94a3b8;
+      }
+      .flow-h {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+      .flow-box {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 10px;
+        padding: 14px 18px;
+        font-size: 0.9rem;
+        color: #e2e8f0;
+        text-align: center;
+        min-width: 130px;
+      }
+      .flow-arrow {
+        color: #06b6d4;
+        font-size: 1.4rem;
+      }
+      .tag {
+        display: inline-block;
+        background: #164e63;
+        color: #67e8f9;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-right: 6px;
+      }
+      .source {
+        font-size: 0.75rem;
+        color: #475569;
+        position: absolute;
+        bottom: 24px;
+        left: 80px;
+      }
+      .code-block {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 8px;
+        padding: 16px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.85rem;
+        color: #a5b4fc;
+        overflow-x: auto;
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>
+
+    <!-- SLIDE 1: CAPA -->
+    <div class="slide active" id="slide-1">
+        <h3>RAG Avançado</h3>
+        <h1>Query Rewriting &<br><span class="accent">Captura de Intenção</span></h1>
+        <p style="font-size: 1.3rem; color: #94a3b8; margin-top: 12px;">Como reescrever a consulta do usuário para otimizar o retrieval e entregar respostas precisas</p>
+        <div style="margin-top: 24px;">
+            <span class="tag">Advanced RAG</span>
+            <span class="tag">Query Transformation</span>
+            <span class="tag">Intent Capture</span>
+            <span class="tag">LangChain</span>
+        </div>
+        <div class="slide-number">1 / 5</div>
+    </div>
+
+    <!-- SLIDE 2: O PROBLEMA -->
+    <div class="slide" id="slide-2">
+        <h2>O Problema: <span class="accent">Query ≠ Intenção</span></h2>
+        <div class="grid-2">
+            <div>
+                <h3>Por que RAG ingênuo falha</h3>
+                <ul>
+                    <li>Usuário escreve query vaga: "me explica mais sobre isso"</li>
+                    <li>Embedding da query não captura a intenção real</li>
+                    <li>Vocabulário do usuário ≠ vocabulário dos documentos</li>
+                    <li>Perguntas multi-hop não são decompostas</li>
+                    <li>Contexto de conversa anterior é ignorado</li>
+                </ul>
+            </div>
+            <div>
+                <div class="card" style="border-left: 3px solid #f87171;">
+                    <h4 style="color: #f87171;">Resultado</h4>
+                    <p>Chunks recuperados não respondem a pergunta real. O LLM alucina ou dá respostas genéricas por falta de contexto relevante.</p>
+                </div>
+                <br>
+                <div class="card">
+                    <h4>Dados</h4>
+                    <p>Queries brutas geram retrieval com recall 40-60% menor que queries reescritas (DMQR-RAG, ArXiv 2024). A lacuna semântica entre query e documento é o principal gargalo.</p>
+                </div>
+            </div>
+        </div>
+        <div class="source">Fonte: ArXiv — DMQR-RAG (2024); NVIDIA Developer Blog (2025); TutorialQ Advanced RAG (2025)</div>
+        <div class="slide-number">2 / 5</div>
+    </div>
+
+    <!-- SLIDE 3: O PROCESSO -->
+    <div class="slide" id="slide-3">
+        <h2>O Processo: <span class="accent">Captura → Reescrita → Retrieval</span></h2>
+        <div class="flow-h">
+            <div class="flow-box">👤 Query<br>original</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">🧠 Captura de<br>intenção</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">✍️ Reescrita<br>da query</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">🔍 Retrieval<br>otimizado</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">✅ Resposta<br>precisa</div>
+        </div>
+        <br>
+        <div class="grid-2" style="margin-top: 20px;">
+            <div>
+                <h3>Captura de Intenção</h3>
+                <ul>
+                    <li>Resolve pronomes e referências anafóricas</li>
+                    <li>Incorpora histórico de conversa (co-referência)</li>
+                    <li>Identifica tipo de query: factual, comparativa, exploratória</li>
+                    <li>Detecta ambiguidade e solicita clarificação ou infere</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Geração de Nova Query</h3>
+                <ul>
+                    <li>LLM reescreve com vocabulário alinhado aos documentos</li>
+                    <li>Pode gerar múltiplas queries (Multi-Query) para cobertura</li>
+                    <li>Pode gerar resposta hipotética (HyDE) como proxy de busca</li>
+                    <li>Pode decompor em sub-queries (Query Decomposition)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="source">Fonte: RQ-RAG (ArXiv, 2024); Query Understanding-Centric RAG (EmergentMind, 2025)</div>
+        <div class="slide-number">3 / 5</div>
+    </div>
+
+    <!-- SLIDE 4: TÉCNICAS -->
+    <div class="slide" id="slide-4">
+        <h2>Técnicas de <span class="accent">Query Rewriting</span></h2>
+        <div class="grid-3">
+            <div class="card">
+                <h4>🔄 Multi-Query</h4>
+                <p>Gera N variações da mesma pergunta. Une resultados de todas. Aumenta recall em 35%+ para queries ambíguas.</p>
+                <p style="margin-top: 8px; color: #67e8f9; font-size: 0.8rem;">DMQR-RAG, ArXiv 2024</p>
+            </div>
+            <div class="card">
+                <h4>📄 HyDE</h4>
+                <p>LLM gera resposta hipotética (sem docs). Embedding da resposta é usado como query. Melhora precision em domínios técnicos.</p>
+                <p style="margin-top: 8px; color: #67e8f9; font-size: 0.8rem;">Gao et al., 2022</p>
+            </div>
+            <div class="card">
+                <h4>🧩 Decomposition</h4>
+                <p>Quebra perguntas complexas em sub-queries independentes. Cada uma recupera chunks específicos. Essencial para multi-hop.</p>
+                <p style="margin-top: 8px; color: #67e8f9; font-size: 0.8rem;">ArXiv 2507.00355</p>
+            </div>
+            <div class="card">
+                <h4>🔙 Step-Back</h4>
+                <p>Generaliza a pergunta para conceito mais amplo antes de buscar. Útil quando a query é muito específica e não tem match direto.</p>
+                <p style="margin-top: 8px; color: #67e8f9; font-size: 0.8rem;">Google DeepMind, 2024</p>
+            </div>
+            <div class="card">
+                <h4>💬 History-Aware</h4>
+                <p>Condensa histórico de conversa + query atual em query standalone. Resolve "isso", "aquele", "o anterior". Essencial em chatbots.</p>
+                <p style="margin-top: 8px; color: #67e8f9; font-size: 0.8rem;">LangChain, 2025</p>
+            </div>
+            <div class="card">
+                <h4>⚡ Q2E / Q2D</h4>
+                <p>Query-to-Expansion e Query-to-Document. Técnicas da NVIDIA que adicionam termos relevantes ou geram pseudo-documentos para busca.</p>
+                <p style="margin-top: 8px; color: #67e8f9; font-size: 0.8rem;">NVIDIA Blog, 2025</p>
+            </div>
+        </div>
+        <div class="slide-number">4 / 5</div>
+    </div>
+
+    <!-- SLIDE 5: IMPLEMENTAÇÃO -->
+    <div class="slide" id="slide-5">
+        <h2>Implementação <span class="accent">Prática</span></h2>
+        <div class="grid-2">
+            <div>
+                <h3>Pipeline recomendado</h3>
+                <ul>
+                    <li><span class="highlight">1.</span> Meça o baseline (RAGAS: recall, precision, faithfulness)</li>
+                    <li><span class="highlight">2.</span> Adicione History-Aware Rewriting (resolve 60% dos problemas)</li>
+                    <li><span class="highlight">3.</span> Adicione Multi-Query para queries ambíguas</li>
+                    <li><span class="highlight">4.</span> Avalie HyDE para domínios técnicos específicos</li>
+                    <li><span class="highlight">5.</span> Monitore custo vs. qualidade em produção</li>
+                </ul>
+                <br>
+                <div class="card">
+                    <h4>Custo</h4>
+                    <p>~$0.001-0.003 por query reescrita (gpt-4o-mini). ROI: menos alucinações = menos retrabalho = mais confiança.</p>
+                </div>
+            </div>
+            <div>
+                <div class="code-block">
+                    <span style="color: #94a3b8;"># LangChain — History-Aware Retriever</span><br>
+                    <span style="color: #c084fc;">from</span> langchain.chains <span style="color: #c084fc;">import</span> create_history_aware_retriever<br><br>
+                    retriever = create_history_aware_retriever(<br>
+                    &nbsp;&nbsp;llm=ChatOpenAI(model=<span style="color: #34d399;">"gpt-4o-mini"</span>),<br>
+                    &nbsp;&nbsp;retriever=vectorstore.as_retriever(),<br>
+                    &nbsp;&nbsp;prompt=rewrite_prompt<br>
+                    )<br><br>
+                    <span style="color: #94a3b8;"># MultiQueryRetriever</span><br>
+                    <span style="color: #c084fc;">from</span> langchain.retrievers <span style="color: #c084fc;">import</span> MultiQueryRetriever<br><br>
+                    mq_retriever = MultiQueryRetriever.from_llm(<br>
+                    &nbsp;&nbsp;retriever=vectorstore.as_retriever(),<br>
+                    &nbsp;&nbsp;llm=ChatOpenAI(model=<span style="color: #34d399;">"gpt-4o-mini"</span>)<br>
+                    )
+                </div>
+            </div>
+        </div>
+        <div class="source">Fonte: LangChain Docs (2025); NVIDIA Developer Blog; TutorialQ Advanced RAG; ArXiv papers citados</div>
+        <div class="slide-number">5 / 5</div>
+    </div>
+
+    <!-- NAVEGAÇÃO -->
+    <div class="nav">
+        <button onclick="prevSlide()">← Anterior</button>
+        <button onclick="nextSlide()">Próximo →</button>
+    </div>
+
+    <script>
+        let current = 1;
+        const total = 5;
+        function showSlide(n) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById('slide-' + n).classList.add('active');
+            current = n;
+        }
+        function nextSlide() { if (current < total) showSlide(current + 1); }
+        function prevSlide() { if (current > 1) showSlide(current - 1); }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-05-11T12:00:00Z",
+  "project_root": ".",
+  "languages": [
+    { "name": "Python", "extensions": [".py"], "file_count": 12 },
+    { "name": "Markdown", "extensions": [".md"], "file_count": 5 },
+    { "name": "JSON", "extensions": [".json"], "file_count": 4 }
+  ],
+  "primary_language": "Python",
+  "frameworks": [
+    {
+      "name": "Streamlit",
+      "version": "unknown",
+      "source": "imports in app.py"
+    },
+    {
+      "name": "LangChain",
+      "version": "unknown",
+      "source": "imports in agents/"
+    },
+    {
+      "name": "langchain-openai",
+      "version": "unknown",
+      "source": "imports in agents/"
+    }
+  ],
+  "package_manager": "uv",
+  "entry_points": [
+    { "path": "apps/streamlit/app.py", "type": "app_entry" },
+    { "path": "apps/streamlit/app_chat.py", "type": "app_entry" },
+    { "path": "main.py", "type": "placeholder" }
+  ],
+  "config_files": [".env.example", "pyproject.toml", "templates/registry.json"],
+  "ci_cd": [],
+  "docker": {},
+  "database_hints": [],
+  "test_framework": null,
+  "test_file_count": 0,
+  "modules": [
+    "pipeline",
+    "ui-forms",
+    "ui-chat",
+    "templates",
+    "prompts",
+    "config"
+  ],
+  "total_files": 21,
+  "organization_suggestion": {
+    "granularity": "feature",
+    "rationale": "Não há roteamento centralizado nem pastas de domínio claras. O projeto é organizado por funcionalidade (pipeline de agentes, interfaces UI, templates).",
+    "signals": [],
+    "features": [
+      "pipeline-generation",
+      "ui-forms",
+      "ui-chat",
+      "template-management",
+      "research",
+      "export-pptx"
+    ]
+  }
+}

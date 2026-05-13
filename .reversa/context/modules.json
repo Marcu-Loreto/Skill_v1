@@ -1,0 +1,404 @@
+{
+  "generated_at": "2026-05-11T12:10:00Z",
+  "modules": [
+    {
+      "name": "pipeline",
+      "path": "apps/streamlit/agents",
+      "purpose": "Pipeline de geração de apresentações com 6 nodes sequenciais (Research → Structure → Content → HTML → PPTX → Validation)",
+      "primary_files": [
+        "apps/streamlit/agents/research_node.py",
+        "apps/streamlit/agents/structure_node.py",
+        "apps/streamlit/agents/content_node.py",
+        "apps/streamlit/agents/html_node.py",
+        "apps/streamlit/agents/pptx_node.py",
+        "apps/streamlit/agents/validation_node.py",
+        "apps/streamlit/agents/quality_standards.py",
+        "apps/streamlit/agents/model_selector.py",
+        "apps/streamlit/agents/state.py",
+        "apps/streamlit/agents/prompt_loader.py"
+      ],
+      "functions": [
+        {
+          "name": "research_node",
+          "file": "apps/streamlit/agents/research_node.py",
+          "params": ["state: dict"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "structure_node",
+          "file": "apps/streamlit/agents/structure_node.py",
+          "params": ["state: dict"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "content_node",
+          "file": "apps/streamlit/agents/content_node.py",
+          "params": ["state: dict"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "html_node",
+          "file": "apps/streamlit/agents/html_node.py",
+          "params": ["state: dict"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "pptx_node",
+          "file": "apps/streamlit/agents/pptx_node.py",
+          "params": ["state: dict"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "validation_node",
+          "file": "apps/streamlit/agents/validation_node.py",
+          "params": ["state: dict"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "apply_quality_standards",
+          "file": "apps/streamlit/agents/quality_standards.py",
+          "params": ["slides: list[dict]"],
+          "returns": "dict (slides + quality_score + reports)",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "filter_and_rank_results",
+          "file": "apps/streamlit/agents/research_node.py",
+          "params": ["results: list[dict]", "max_results: int"],
+          "returns": "list[dict]",
+          "confidence": "confirmed"
+        }
+      ],
+      "entities": [
+        {
+          "name": "PresentationState",
+          "fields": [
+            { "name": "tema", "type": "str", "required": true },
+            { "name": "publico", "type": "str", "required": true },
+            { "name": "tom", "type": "str", "required": true },
+            { "name": "num_slides", "type": "int", "required": true },
+            { "name": "template", "type": "str", "required": true },
+            { "name": "formato_saida", "type": "list[str]", "required": true },
+            {
+              "name": "slides",
+              "type": "list[SlideContent]",
+              "required": false
+            },
+            { "name": "html_content", "type": "str", "required": false },
+            { "name": "is_valid", "type": "bool", "required": false }
+          ],
+          "confidence": "confirmed"
+        },
+        {
+          "name": "ResearchResult",
+          "fields": [
+            { "name": "title", "type": "str", "required": true },
+            { "name": "source", "type": "str", "required": true },
+            { "name": "url", "type": "str", "required": true },
+            { "name": "snippet", "type": "str", "required": true },
+            { "name": "date", "type": "str", "required": false }
+          ],
+          "confidence": "confirmed"
+        },
+        {
+          "name": "SlideContent",
+          "fields": [
+            { "name": "slide_number", "type": "int", "required": true },
+            { "name": "title", "type": "str", "required": true },
+            { "name": "subtitle", "type": "str", "required": false },
+            { "name": "content", "type": "list[str]", "required": true },
+            { "name": "notes", "type": "str", "required": false }
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "business_rules": [
+        {
+          "description": "Máximo 6 bullets por slide",
+          "location": "agents/quality_standards.py:12",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Máximo 18 palavras por bullet",
+          "location": "agents/quality_standards.py:13",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Formato 16:9 (13.333 x 7.5 inches)",
+          "location": "agents/quality_standards.py:14-15",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Idioma obrigatório pt-BR",
+          "location": "agents/quality_standards.py:17",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Títulos genéricos proibidos",
+          "location": "agents/quality_standards.py:20-29",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Retry máximo de validação: 2",
+          "location": "agents/validation_node.py",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Domínios bloqueados para pesquisa",
+          "location": "agents/research_node.py:BLOCKED_DOMAINS",
+          "confidence": "confirmed"
+        }
+      ],
+      "dependencies": ["config", "prompts", "templates"],
+      "algorithms": [
+        "Ranking heurístico de resultados de pesquisa",
+        "Adaptação de framework de slides ao número solicitado",
+        "Parsing de resposta LLM com marcadores ---SLIDE---/---FIM---",
+        "Quality scoring (100 - penalidades)"
+      ],
+      "complexity": "high"
+    },
+    {
+      "name": "ui-forms",
+      "path": "apps/streamlit/app.py",
+      "purpose": "Interface Streamlit com formulários estruturados para 3 modos: Apresentação Livre, Proposta de Projeto, Gerenciar Templates",
+      "primary_files": ["apps/streamlit/app.py"],
+      "functions": [
+        {
+          "name": "load_templates",
+          "file": "apps/streamlit/app.py",
+          "params": [],
+          "returns": "list[dict]",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "get_template_names",
+          "file": "apps/streamlit/app.py",
+          "params": [],
+          "returns": "list[str]",
+          "confidence": "confirmed"
+        }
+      ],
+      "entities": [],
+      "business_rules": [
+        {
+          "description": "Slides: min 5, max 25, default 12",
+          "location": "app.py:st.slider",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Etapas: min 2, max 10, default 4",
+          "location": "app.py:st.number_input",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Upload aceita apenas .pptx e .pdf",
+          "location": "app.py:st.file_uploader",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Proposta requer nome + problema + solução",
+          "location": "app.py:disabled check",
+          "confidence": "confirmed"
+        }
+      ],
+      "dependencies": ["pipeline", "templates", "config"],
+      "algorithms": [],
+      "complexity": "medium"
+    },
+    {
+      "name": "ui-chat",
+      "path": "apps/streamlit/app_chat.py",
+      "purpose": "Interface chat simplificada — prompt livre gera HTML diretamente via LLM com fallback chain MiniMax → OpenAI",
+      "primary_files": ["apps/streamlit/app_chat.py"],
+      "functions": [],
+      "entities": [],
+      "business_rules": [
+        {
+          "description": "MiniMax tentado primeiro (custo zero)",
+          "location": "app_chat.py:fallback chain",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Mínimo 5 slides no system prompt",
+          "location": "app_chat.py:system_msg",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Dark theme forçado",
+          "location": "app_chat.py:system_msg",
+          "confidence": "confirmed"
+        }
+      ],
+      "dependencies": ["pipeline", "config"],
+      "algorithms": ["Fallback chain LLM: MiniMax → gpt-4o-mini"],
+      "complexity": "low"
+    },
+    {
+      "name": "templates",
+      "path": "apps/streamlit/template_register.py",
+      "purpose": "Sistema de templates corporativos — upload de .pptx, extração de cores/fontes/logo, registro em registry.json",
+      "primary_files": [
+        "apps/streamlit/template_register.py",
+        "templates/registry.json"
+      ],
+      "functions": [
+        {
+          "name": "register_template",
+          "file": "apps/streamlit/template_register.py",
+          "params": [
+            "pptx_file_path",
+            "template_name",
+            "template_id",
+            "description",
+            "footer"
+          ],
+          "returns": "dict (manifest)",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "extract_theme_colors",
+          "file": "apps/streamlit/template_register.py",
+          "params": ["prs: Presentation"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "extract_fonts",
+          "file": "apps/streamlit/template_register.py",
+          "params": ["prs: Presentation"],
+          "returns": "dict",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "extract_logo",
+          "file": "apps/streamlit/template_register.py",
+          "params": ["prs: Presentation", "output_dir: Path"],
+          "returns": "Optional[str]",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "list_templates",
+          "file": "apps/streamlit/template_register.py",
+          "params": [],
+          "returns": "list[dict]",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "delete_template",
+          "file": "apps/streamlit/template_register.py",
+          "params": ["template_id: str"],
+          "returns": "bool",
+          "confidence": "confirmed"
+        }
+      ],
+      "entities": [],
+      "business_rules": [
+        {
+          "description": "Logo detectado por shape_type == 13 (Picture) e tamanho < 3 inches",
+          "location": "template_register.py:extract_logo",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Cores default se extração falhar: primary=#0066CC",
+          "location": "template_register.py:extract_theme_colors",
+          "confidence": "confirmed"
+        }
+      ],
+      "dependencies": ["config"],
+      "algorithms": [
+        "Extração heurística de cores do slide master",
+        "Detecção de logo por tamanho"
+      ],
+      "complexity": "medium"
+    },
+    {
+      "name": "prompts",
+      "path": "prompt",
+      "purpose": "System prompts dos agentes em arquivos Markdown — carregados em runtime via prompt_loader.py",
+      "primary_files": [
+        "prompt/content_agent.md",
+        "prompt/structure_agent.md",
+        "prompt/html_generator.md",
+        "prompt/proposal_agent.md",
+        "apps/streamlit/agents/prompt_loader.py"
+      ],
+      "functions": [
+        {
+          "name": "load_prompt",
+          "file": "apps/streamlit/agents/prompt_loader.py",
+          "params": ["prompt_name: str"],
+          "returns": "str",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "list_prompts",
+          "file": "apps/streamlit/agents/prompt_loader.py",
+          "params": [],
+          "returns": "list[str]",
+          "confidence": "confirmed"
+        }
+      ],
+      "entities": [],
+      "business_rules": [
+        {
+          "description": "Prompts nunca hardcoded — sempre em prompt/*.md",
+          "location": "agents/prompt_loader.py",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Cache LRU com maxsize=10",
+          "location": "agents/prompt_loader.py:@lru_cache",
+          "confidence": "confirmed"
+        }
+      ],
+      "dependencies": [],
+      "algorithms": [],
+      "complexity": "low"
+    },
+    {
+      "name": "config",
+      "path": "apps/streamlit/config.py",
+      "purpose": "Configuração centralizada via dotenv + classe Settings com lru_cache singleton",
+      "primary_files": ["apps/streamlit/config.py", ".env.example"],
+      "functions": [
+        {
+          "name": "get_settings",
+          "file": "apps/streamlit/config.py",
+          "params": [],
+          "returns": "Settings",
+          "confidence": "confirmed"
+        },
+        {
+          "name": "get_model_for_task",
+          "file": "apps/streamlit/config.py",
+          "params": ["complexity: str"],
+          "returns": "str",
+          "confidence": "confirmed"
+        }
+      ],
+      "entities": [],
+      "business_rules": [
+        {
+          "description": "Todas as estratégias retornam gpt-4o-mini (diverge do design)",
+          "location": "config.py:get_model_for_task",
+          "confidence": "confirmed"
+        },
+        {
+          "description": "Validação de API keys por prefixo placeholder",
+          "location": "config.py:has_openai/has_minimax/has_tavily",
+          "confidence": "confirmed"
+        }
+      ],
+      "dependencies": [],
+      "algorithms": [],
+      "complexity": "low"
+    }
+  ]
+}

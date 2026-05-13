@@ -1,0 +1,31 @@
+{
+  "id": "empresa-teste",
+  "name": "Empresa Teste",
+  "description": "Template de teste para validação",
+  "colors": {
+    "primary": "#0066CC",
+    "secondary": "#003366",
+    "accent": "#00AAFF",
+    "background": "#FFFFFF",
+    "text": "#1A1A1A"
+  },
+  "fonts": {
+    "title": "Montserrat",
+    "body": "Arial"
+  },
+  "logo": null,
+  "footer": "© 2026 Empresa Teste",
+  "layouts": [
+    "Title Slide",
+    "Title and Content",
+    "Section Header",
+    "Two Content",
+    "Comparison",
+    "Title Only",
+    "Blank",
+    "Content with Caption",
+    "Picture with Caption",
+    "Title and Vertical Text",
+    "Vertical Title and Text"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "template-50anos",
+  "name": "Template 50anos",
+  "description": "template de slides comemorativo dos 50 anos",
+  "colors": {
+    "primary": "#0066CC",
+    "secondary": "#003366",
+    "accent": "#00AAFF",
+    "background": "#FFFFFF",
+    "text": "#1A1A1A"
+  },
+  "fonts": {
+    "title": "Arial",
+    "body": "Arial"
+  },
+  "logo": null,
+  "footer": "cpqd",
+  "layouts": [
+    "TITLE",
+    "SECTION_HEADER",
+    "TITLE_AND_BODY",
+    "TITLE_AND_TWO_COLUMNS",
+    "TITLE_ONLY",
+    "ONE_COLUMN_TEXT",
+    "MAIN_POINT",
+    "SECTION_TITLE_AND_DESCRIPTION",
+    "CAPTION_ONLY",
+    "BIG_NUMBER",
+    "BLANK"
+  ]
+}

@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      GenApp — Processo de Geração de Aplicação de IA no Setor Público
+    </title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #ffffff;
+        color: #1e293b;
+        overflow: hidden;
+        height: 100vh;
+      }
+      .slide {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 50px 70px;
+        position: relative;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .slide.active {
+        display: flex;
+      }
+      .slide-number {
+        position: absolute;
+        bottom: 24px;
+        right: 40px;
+        font-size: 13px;
+        color: #94a3b8;
+      }
+      .nav {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 100;
+      }
+      .nav button {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .nav button:hover {
+        background: #e2e8f0;
+        border-color: #0284c7;
+      }
+      h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        color: #0f172a;
+      }
+      h2 {
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #1e293b;
+      }
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #475569;
+        margin-bottom: 14px;
+      }
+      p {
+        font-size: 1.15rem;
+        line-height: 1.7;
+        color: #475569;
+        max-width: 900px;
+      }
+      .accent {
+        color: #0891b2;
+      }
+      .accent2 {
+        color: #7c3aed;
+      }
+      .highlight {
+        color: #059669;
+      }
+      .warn {
+        color: #d97706;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #475569;
+        padding-left: 24px;
+        position: relative;
+        margin-bottom: 6px;
+      }
+      ul li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #0891b2;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+        align-items: start;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+      }
+      .grid-4 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 20px;
+      }
+      .card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 28px;
+      }
+      .card h4 {
+        font-size: 1rem;
+        color: #0891b2;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+      .card p {
+        font-size: 0.95rem;
+        color: #64748b;
+      }
+      .card-phase {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 24px;
+        border-left: 4px solid #0891b2;
+      }
+      .card-phase.phase-0 {
+        border-left-color: #7c3aed;
+      }
+      .card-phase.phase-1 {
+        border-left-color: #0891b2;
+      }
+      .card-phase.phase-2 {
+        border-left-color: #db2777;
+      }
+      .card-phase.phase-3 {
+        border-left-color: #059669;
+      }
+      .card-phase.phase-4 {
+        border-left-color: #d97706;
+      }
+      .card-phase h4 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .card-phase p {
+        font-size: 0.9rem;
+        color: #64748b;
+      }
+      .stat {
+        text-align: center;
+        padding: 20px;
+      }
+      .stat .number {
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: #0891b2;
+      }
+      .stat .label {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-top: 6px;
+      }
+      .flow-horizontal {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+      .flow-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 0.85rem;
+        color: #334155;
+        text-align: center;
+        min-width: 120px;
+      }
+      .flow-box.active-phase {
+        border-color: #0891b2;
+        background: #ecfeff;
+      }
+      .flow-arrow {
+        color: #0891b2;
+        font-size: 1.3rem;
+      }
+      .subtitle {
+        font-size: 1.4rem;
+        color: #64748b;
+        margin-bottom: 32px;
+      }
+      .tag {
+        display: inline-block;
+        background: #ecfeff;
+        color: #0e7490;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-right: 6px;
+        margin-bottom: 6px;
+      }
+      .tag.purple {
+        background: #f5f3ff;
+        color: #6d28d9;
+      }
+      .tag.green {
+        background: #ecfdf5;
+        color: #047857;
+      }
+      .tag.yellow {
+        background: #fffbeb;
+        color: #b45309;
+      }
+      .tag.pink {
+        background: #fdf2f8;
+        color: #be185d;
+      }
+      .source {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        position: absolute;
+        bottom: 24px;
+        left: 70px;
+      }
+      .actor-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        color: #334155;
+        margin-bottom: 12px;
+      }
+      .actor-badge .icon {
+        font-size: 1.2rem;
+      }
+      .cpqd-label {
+        display: inline-block;
+        background: #ecfeff;
+        color: #0e7490;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: #e2e8f0;
+        margin: 16px 0;
+      }
+      .two-col-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 40px;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>
+
+<!-- SLIDE 1: CAPA -->
+<div class="slide active" id="slide-1">
+  <h3>Processo End-to-End</h3>
+  <h1>
+    Geração de uma <span class="accent">Aplicação de IA</span><br />no Setor
+    Público
+  </h1>
+  <p class="subtitle">
+    Da identificação do problema público à entrega personalizada ao cidadão — o
+    fluxo completo de uma GenApp de Política Pública
+  </p>
+  <div style="margin-top: 24px">
+    <span class="tag">GenAI</span>
+    <span class="tag purple">Política Pública</span>
+    <span class="tag green">Data Lakehouse</span>
+    <span class="tag yellow">Guard Rails</span>
+    <span class="tag pink">Privacy by Design</span>
+  </div>
+  <div class="slide-number">1 / 16</div>
+</div>
+
+<!-- SLIDE 2: AGENDA -->
+<div class="slide" id="slide-2">
+  <h2>Agenda</h2>
+  <div class="two-col-list">
+    <ul>
+      <li>Visão geral do processo</li>
+      <li>Atores envolvidos</li>
+      <li>Fase 0 — Compreensão e Design</li>
+      <li>Fase 1 — Engenharia de Dados</li>
+      <li>Fase 2 — Conformidade e Ética</li>
+      <li>Fase 3 — Fábrica da Solução (GenApp)</li>
+      <li>Fase 4 — Entrega e Monitoramento</li>
+      <li>Ciclo de feedback e ajuste</li>
+    </ul>
+    <ul>
+      <li>Arquitetura técnica integrada</li>
+      <li>Núcleos CPQD envolvidos</li>
+      <li>Governança e Guard Rails</li>
+      <li>Métricas e KPIs</li>
+      <li>Linha do tempo típica</li>
+      <li>Benefícios esperados</li>
+      <li>Riscos e mitigações</li>
+      <li>Próximos passos</li>
+    </ul>
+  </div>
+  <div class="slide-number">2 / 16</div>
+</div>
+
+<!-- SLIDE 3: VISÃO GERAL -->
+<div class="slide" id="slide-3">
+  <h2>Visão Geral do <span class="accent">Processo</span></h2>
+  <div class="flow-horizontal">
+    <div class="flow-box" style="border-color: #7c3aed">
+      Gestor identifica<br />problema
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box" style="border-color: #7c3aed">
+      Fase 0<br /><small>Design</small>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box" style="border-color: #0891b2">
+      Fase 1<br /><small>Dados</small>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box" style="border-color: #db2777">
+      Fase 2<br /><small>Ética</small>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box" style="border-color: #059669">
+      Fase 3<br /><small>GenApp</small>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box" style="border-color: #d97706">
+      Fase 4<br /><small>Entrega</small>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box" style="border-color: #d97706">
+      Cidadão<br />atendido
+    </div>
+  </div>
+  <br /><br />
+  <div class="grid-2">
+    <div>
+      <h3>Princípios do fluxo</h3>
+      <ul>
+        <li>Centrado no cidadão (Persona-first)</li>
+        <li>Dados como ativo estratégico</li>
+        <li>Ética e privacidade desde o design</li>
+        <li>IA generativa com Guard Rails</li>
+        <li>Monitoramento contínuo de impacto</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card">
+        <h4>Resultado Final</h4>
+        <p>
+          Uma "GenApp" — aplicação de IA generativa especializada na política
+          pública — que entrega valor personalizado ao cidadão e é monitorada em
+          tempo real pelo gestor.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">3 / 16</div>
+</div>
+
+<!-- SLIDE 4: ATORES -->
+<div class="slide" id="slide-4">
+  <h2>Atores <span class="accent">Envolvidos</span></h2>
+  <div class="grid-3">
+    <div class="card">
+      <h4>🏛️ Gestor Público</h4>
+      <p>
+        Órgão demandante. Identifica o problema, define KPIs, valida entregas e
+        monitora resultados da política pública.
+      </p>
+      <div class="divider"></div>
+      <p style="color: #0e7490; font-size: 0.85rem">
+        Papel: Dono do problema e do resultado
+      </p>
+    </div>
+    <div class="card">
+      <h4>⚙️ Núcleos CPQD</h4>
+      <p>
+        7 núcleos especializados que executam cada fase do processo — da
+        prospecção à comunicação personalizada.
+      </p>
+      <div class="divider"></div>
+      <p style="color: #0e7490; font-size: 0.85rem">
+        Papel: Motor técnico e operacional
+      </p>
+    </div>
+    <div class="card">
+      <h4>👤 Cidadão (Persona)</h4>
+      <p>
+        Público-alvo da política pública. Recebe a entrega personalizada via
+        canais digitais (Caixa Postal, app, SMS).
+      </p>
+      <div class="divider"></div>
+      <p style="color: #0e7490; font-size: 0.85rem">
+        Papel: Beneficiário final e fonte de feedback
+      </p>
+    </div>
+  </div>
+  <br />
+  <h3>Núcleos CPQD no Processo</h3>
+  <div class="flow-horizontal">
+    <div class="flow-box">
+      <span class="cpqd-label">META3</span><br />Núcleo de IA
+    </div>
+    <div class="flow-box">
+      <span class="cpqd-label">META5</span><br />Qualificação Dados
+    </div>
+    <div class="flow-box">
+      <span class="cpqd-label">META1</span><br />Interoperabilidade
+    </div>
+    <div class="flow-box">
+      <span class="cpqd-label">META4</span><br />Cibersegurança
+    </div>
+    <div class="flow-box">
+      <span class="cpqd-label">META2</span><br />Plataforma GenAI
+    </div>
+    <div class="flow-box">
+      <span class="cpqd-label">META6</span><br />Comunicação
+    </div>
+    <div class="flow-box">
+      <span class="cpqd-label">META7</span><br />DestaqueGovBr
+    </div>
+  </div>
+  <div class="slide-number">4 / 16</div>
+</div>
+
+<!-- SLIDE 5: FASE 0 -->
+<div class="slide" id="slide-5">
+  <div class="actor-badge">
+    <span class="icon">📋</span> FASE 0 — Compreensão, Prospecção e Design da
+    Política
+  </div>
+  <h2>Entendendo o <span class="accent2">Problema Público</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3>O que acontece</h3>
+      <p>
+        O Gestor Público identifica uma necessidade e aciona o
+        <span class="cpqd-label">META3</span> Núcleo de IA para iniciar a fase
+        de prospecção.
+      </p>
+      <br />
+      <h3>Ações executadas</h3>
+      <ul>
+        <li>Mapeamento de riscos e entendimento profundo do problema</li>
+        <li>Definição das Personas (público-alvo da política)</li>
+        <li>Definição de Métricas de Sucesso (KPIs)</li>
+        <li>Análise de viabilidade técnica e orçamentária</li>
+        <li>Benchmarking de soluções similares</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card-phase phase-0">
+        <h4 style="color: #7c3aed">Saídas desta fase</h4>
+        <br />
+        <p>✅ Escopo aprovado e documentado</p>
+        <br />
+        <p>✅ KPIs do projeto definidos e mensuráveis</p>
+        <br />
+        <p>✅ Personas mapeadas com necessidades reais</p>
+        <br />
+        <p>✅ Riscos identificados e plano de mitigação</p>
+      </div>
+      <br />
+      <div class="card">
+        <h4>Por que isso importa</h4>
+        <p>
+          Sem clareza sobre o problema e as personas, a IA resolve a coisa
+          errada. Esta fase garante que a tecnologia serve à política — não o
+          contrário.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">5 / 16</div>
+</div>
+
+<!-- SLIDE 6: FASE 1 -->
+<div class="slide" id="slide-6">
+  <div class="actor-badge">
+    <span class="icon">🗄️</span> FASE 1 — Engenharia, Levantamento e Integração
+    de Dados
+  </div>
+  <h2>Construindo a <span class="accent">Base de Dados</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3><span class="cpqd-label">META5</span> Qualificação de Dados</h3>
+      <ul>
+        <li>Cruza bases de dados com base nas Personas definidas</li>
+        <li>Limpeza e normalização no Data Lakehouse</li>
+        <li>Validação de endereçamento real dos cidadãos</li>
+        <li>Consolidação de datasets confiáveis</li>
+      </ul>
+      <br />
+      <h3><span class="cpqd-label">META1</span> Interoperabilidade</h3>
+      <ul>
+        <li>Catalogação de metadados da política pública</li>
+        <li>Disponibilização via APIs REST/GraphQL</li>
+        <li>Consumo seguro entre sistemas e órgãos</li>
+        <li>Padrões de interoperabilidade governamental</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card-phase phase-1">
+        <h4 style="color: #0891b2">Saídas desta fase</h4>
+        <br />
+        <p>✅ Datasets consolidados e confiáveis</p>
+        <br />
+        <p>✅ Endereçamento real validado</p>
+        <br />
+        <p>✅ APIs seguras para consumo (REST/GraphQL)</p>
+        <br />
+        <p>✅ Metadados catalogados e documentados</p>
+      </div>
+      <br />
+      <div class="card">
+        <h4>Arquitetura de Dados</h4>
+        <p>
+          Data Lakehouse centraliza dados brutos e processados. APIs expõem
+          apenas o necessário, com controle de acesso granular por órgão e por
+          política.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">6 / 16</div>
+</div>
+
+<!-- SLIDE 7: FASE 2 -->
+<div class="slide" id="slide-7">
+  <div class="actor-badge">
+    <span class="icon">🛡️</span> FASE 2 — Conformidade, Ética e Proteção de
+    Dados
+  </div>
+  <h2>
+    Garantindo
+    <span class="accent" style="color: #db2777">Ética e Segurança</span>
+  </h2>
+  <div class="grid-2">
+    <div>
+      <h3><span class="cpqd-label">META3</span> Núcleo de IA — Fase Ética</h3>
+      <ul>
+        <li>Aplicação de metodologias de mitigação de vieses</li>
+        <li>Testes de fairness nos modelos e dados</li>
+        <li>Documentação de decisões éticas (Model Cards)</li>
+        <li>Validação de representatividade das Personas</li>
+      </ul>
+      <br />
+      <h3><span class="cpqd-label">META4</span> Cibersegurança</h3>
+      <ul>
+        <li>Privacy by Design aplicado desde a arquitetura</li>
+        <li>PETs — Privacy Enhancing Technologies</li>
+        <li>Anonimização e pseudonimização de dados sensíveis</li>
+        <li>Validação de infraestrutura contra ataques</li>
+        <li>Conformidade LGPD e Marco Legal da IA</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card-phase phase-2">
+        <h4 style="color: #db2777">Saídas desta fase</h4>
+        <br />
+        <p>✅ Dados do cidadão protegidos (LGPD)</p>
+        <br />
+        <p>✅ Infraestrutura validada e segura</p>
+        <br />
+        <p>✅ Vieses identificados e mitigados</p>
+        <br />
+        <p>✅ Documentação ética completa</p>
+      </div>
+      <br />
+      <div class="card" style="border-left: 3px solid #db2777">
+        <h4 style="color: #db2777">Princípio Fundamental</h4>
+        <p>
+          Nenhuma GenApp vai para produção sem passar por esta fase. A proteção
+          do cidadão é pré-requisito, não feature opcional.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">7 / 16</div>
+</div>
+
+<!-- SLIDE 8: FASE 3 -->
+<div class="slide" id="slide-8">
+  <div class="actor-badge">
+    <span class="icon">🏭</span> FASE 3 — A Fábrica da Solução e Interpretação
+    Generativa
+  </div>
+  <h2>Construindo a <span class="highlight">GenApp</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3>
+        <span class="cpqd-label">META2</span> Plataforma GenAI (Low/No-code)
+      </h3>
+      <ul>
+        <li>Absorve o escopo definido na Fase 0</li>
+        <li>Consome as APIs seguras das Fases 1 e 2</li>
+        <li>Orquestra agentes de IA especializados</li>
+        <li>Calibra Guard Rails no LLM</li>
+        <li>Configura fluxos de decisão e automação</li>
+        <li>Testes de qualidade e validação com Personas</li>
+      </ul>
+      <br />
+      <div class="card">
+        <h4>O que é uma GenApp?</h4>
+        <p>
+          Uma aplicação de IA generativa especializada — o "motor especialista"
+          da política pública. Não é um chatbot genérico: é um sistema que
+          entende o contexto da política e age sobre ele.
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="card-phase phase-3">
+        <h4 style="color: #059669">Saída desta fase</h4>
+        <br />
+        <p style="font-size: 1.1rem; color: #1e293b">
+          ✅ <strong>"GenApp" da Política Pública</strong>
+        </p>
+        <br />
+        <p>Motor especialista em funcionamento, com:</p>
+        <br />
+        <p>• Agentes de IA orquestrados</p>
+        <p>• Guard Rails calibrados</p>
+        <p>• APIs integradas e seguras</p>
+        <p>• Pronto para entrega ao cidadão</p>
+      </div>
+      <br />
+      <div class="card" style="border-left: 3px solid #059669">
+        <h4 style="color: #059669">Guard Rails</h4>
+        <p>
+          Limites de segurança no LLM que impedem respostas fora do escopo,
+          alucinações, vazamento de dados e comportamentos não autorizados.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">8 / 16</div>
+</div>
+
+<!-- SLIDE 9: FASE 4 -->
+<div class="slide" id="slide-9">
+  <div class="actor-badge">
+    <span class="icon">📬</span> FASE 4 — Entrega à Persona e Monitoramento
+  </div>
+  <h2>Chegando ao <span class="warn">Cidadão</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3><span class="cpqd-label">META6</span> Comunicação Personalizada</h3>
+      <ul>
+        <li>Cruza a GenApp com plataforma CDP</li>
+        <li>Segmenta por Personas definidas na Fase 0</li>
+        <li>Gera mensagens proativas e personalizadas</li>
+        <li>Entrega via Caixa Postal digital (checklist)</li>
+        <li>Multicanal: app, SMS, e-mail, portal</li>
+      </ul>
+      <br />
+      <h3>
+        <span class="cpqd-label">META7</span> DestaqueGovBr (Gestão Inteligente)
+      </h3>
+      <ul>
+        <li>Monitora engajamento na ponta</li>
+        <li>Acompanha notícias e percepção pública</li>
+        <li>Mede adesão em tempo real</li>
+        <li>Gera dashboards e clipping exportável</li>
+        <li>Produz insights preditivos para o gestor</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card-phase phase-4">
+        <h4 style="color: #d97706">Saídas desta fase</h4>
+        <br />
+        <p>✅ Cidadão recebe mensagem proativa personalizada</p>
+        <br />
+        <p>✅ Checklist na Caixa Postal digital</p>
+        <br />
+        <p>✅ Dashboards de monitoramento em tempo real</p>
+        <br />
+        <p>✅ Clipping exportável e insights preditivos</p>
+      </div>
+      <br />
+      <div class="card" style="border-left: 3px solid #d97706">
+        <h4 style="color: #d97706">CDP — Customer Data Platform</h4>
+        <p>
+          Plataforma que unifica dados do cidadão de múltiplas fontes para
+          permitir comunicação personalizada e contextual — sem expor dados
+          sensíveis.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">9 / 16</div>
+</div>
+
+<!-- SLIDE 10: CICLO DE FEEDBACK -->
+<div class="slide" id="slide-10">
+  <h2>Ciclo de <span class="accent">Feedback</span> e Ajuste Contínuo</h2>
+  <div class="grid-2">
+    <div>
+      <p style="font-size: 1.2rem; color: #1e293b">
+        O processo não termina na entrega. O Gestor Público fecha o ciclo
+        comparando métricas reais com os KPIs definidos na Fase 0.
+      </p>
+      <br />
+      <h3>Loop de melhoria</h3>
+      <ul>
+        <li>META7 entrega métricas de engajamento e adesão</li>
+        <li>Gestor compara com KPIs da Fase 0</li>
+        <li>Identifica gaps e oportunidades de ajuste</li>
+        <li>Ajusta tom da comunicação (META6)</li>
+        <li>Refina modelos e Guard Rails (META2/META3)</li>
+        <li>Ciclo se repete até atingir metas</li>
+      </ul>
+    </div>
+    <div>
+      <div
+        class="card"
+        style="background: linear-gradient(135deg, #f8fafc, #ecfeff)"
+      >
+        <h4>Fluxo Circular</h4>
+        <br />
+        <p style="text-align: center; font-size: 1rem; color: #1e293b">
+          Entrega → Medição → Análise → Ajuste → Entrega
+        </p>
+        <br />
+        <p style="text-align: center; font-size: 2rem">🔄</p>
+        <br />
+        <p>
+          O gestor garante o sucesso da política pública através de iteração
+          contínua baseada em dados reais de impacto.
+        </p>
+      </div>
+      <br />
+      <div class="card">
+        <h4>Decisões baseadas em evidência</h4>
+        <p>
+          Não é achismo — são dashboards com dados de engajamento real, clipping
+          de mídia e insights preditivos alimentando cada decisão de ajuste.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">10 / 16</div>
+</div>
+
+<!-- SLIDE 11: ARQUITETURA TÉCNICA -->
+<div class="slide" id="slide-11">
+  <h2>Arquitetura <span class="accent">Técnica Integrada</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3>Stack Tecnológico</h3>
+      <ul>
+        <li>
+          <span class="highlight">Data Lakehouse</span> — Armazenamento
+          unificado (raw + processado)
+        </li>
+        <li>
+          <span class="highlight">APIs REST/GraphQL</span> — Interoperabilidade
+          entre órgãos
+        </li>
+        <li>
+          <span class="highlight">Plataforma GenAI</span> — Low/No-code para
+          orquestração
+        </li>
+        <li>
+          <span class="highlight">LLMs com Guard Rails</span> — Geração
+          controlada
+        </li>
+        <li>
+          <span class="highlight">CDP</span> — Personalização de comunicação
+        </li>
+        <li><span class="highlight">PETs</span> — Privacidade computacional</li>
+        <li>
+          <span class="highlight">Dashboards BI</span> — Monitoramento em tempo
+          real
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div class="card">
+        <h4>Camadas da Arquitetura</h4>
+        <br />
+        <p style="color: #7c3aed">▸ Camada de Ingestão</p>
+        <p style="font-size: 0.85rem">
+          Bases governamentais, registros civis, dados socioeconômicos
+        </p>
+        <br />
+        <p style="color: #0891b2">▸ Camada de Processamento</p>
+        <p style="font-size: 0.85rem">
+          Limpeza, cruzamento, anonimização, catalogação
+        </p>
+        <br />
+        <p style="color: #059669">▸ Camada de Inteligência</p>
+        <p style="font-size: 0.85rem">
+          Agentes de IA, LLMs, orquestração, Guard Rails
+        </p>
+        <br />
+        <p style="color: #d97706">▸ Camada de Entrega</p>
+        <p style="font-size: 0.85rem">
+          CDP, multicanal, personalização, monitoramento
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">11 / 16</div>
+</div>
+
+<!-- SLIDE 12: GOVERNANÇA E GUARD RAILS -->
+<div class="slide" id="slide-12">
+  <h2>Governança e <span class="warn">Guard Rails</span></h2>
+  <div class="grid-3">
+    <div class="card">
+      <h4>Guard Rails de Conteúdo</h4>
+      <p>
+        LLM não pode gerar informações fora do escopo da política. Respostas são
+        validadas contra base de conhecimento oficial.
+      </p>
+    </div>
+    <div class="card">
+      <h4>Guard Rails de Privacidade</h4>
+      <p>
+        Dados pessoais nunca são expostos ao modelo. PETs garantem que a IA
+        trabalha com dados anonimizados ou pseudonimizados.
+      </p>
+    </div>
+    <div class="card">
+      <h4>Guard Rails de Viés</h4>
+      <p>
+        Testes de fairness contínuos. Monitoramento de disparidade de impacto
+        entre grupos demográficos.
+      </p>
+    </div>
+    <div class="card">
+      <h4>Guard Rails de Segurança</h4>
+      <p>
+        Proteção contra prompt injection, data leakage e ataques adversariais.
+        Infraestrutura validada pelo META4.
+      </p>
+    </div>
+    <div class="card">
+      <h4>Guard Rails de Escopo</h4>
+      <p>
+        Agentes operam apenas dentro dos limites definidos na Fase 0. Qualquer
+        ação fora do escopo é bloqueada e logada.
+      </p>
+    </div>
+    <div class="card">
+      <h4>Guard Rails de Auditoria</h4>
+      <p>
+        Toda decisão do sistema é rastreável. Logs completos para accountability
+        e transparência pública.
+      </p>
+    </div>
+  </div>
+  <div class="slide-number">12 / 16</div>
+</div>
+
+<!-- SLIDE 13: MÉTRICAS -->
+<div class="slide" id="slide-13">
+  <h2>Métricas e <span class="accent">KPIs</span> do Processo</h2>
+  <div class="grid-2">
+    <div>
+      <h3>KPIs por Fase</h3>
+      <table style="width: 100%; font-size: 0.95rem">
+        <tr style="border-bottom: 1px solid #e2e8f0">
+          <td style="padding: 10px 0; color: #7c3aed">Fase 0</td>
+          <td style="padding: 10px 0; color: #475569">
+            Tempo de definição de escopo, clareza de personas
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0">
+          <td style="padding: 10px 0; color: #0891b2">Fase 1</td>
+          <td style="padding: 10px 0; color: #475569">
+            Qualidade dos dados (completude, acurácia), tempo de integração
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0">
+          <td style="padding: 10px 0; color: #db2777">Fase 2</td>
+          <td style="padding: 10px 0; color: #475569">
+            Score de fairness, cobertura LGPD, vulnerabilidades corrigidas
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0">
+          <td style="padding: 10px 0; color: #059669">Fase 3</td>
+          <td style="padding: 10px 0; color: #475569">
+            Acurácia do modelo, taxa de Guard Rail triggers, tempo de resposta
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 0; color: #d97706">Fase 4</td>
+          <td style="padding: 10px 0; color: #475569">
+            Taxa de abertura, engajamento, adesão à política, NPS cidadão
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h3>Métricas de Impacto Final</h3>
+      <div class="card">
+        <h4>Para o Gestor</h4>
+        <p>
+          • % de adesão à política pública<br />• Custo por cidadão atendido<br />•
+          Tempo médio de resolução<br />• ROI da solução vs. processo manual
+        </p>
+      </div>
+      <br />
+      <div class="card">
+        <h4>Para o Cidadão</h4>
+        <p>
+          • Tempo até receber o benefício/serviço<br />• Satisfação (NPS)<br />•
+          Redução de idas presenciais<br />• Clareza da comunicação recebida
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">13 / 16</div>
+</div>
+
+<!-- SLIDE 14: LINHA DO TEMPO -->
+<div class="slide" id="slide-14">
+    <h2>Linha do Tempo <span class="accent">Típica</span></h2>
+    <div style="margin-top: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
+            <div class="card-phase phase-0" style="text-align: center;">
+                <h4 style="color: #7c3aed;">Fase 0</h4>
+                <p style="font-size: 1.8rem; color: #1e293b; margin: 8px 0;">4-6</p>
+                <p>semanas</p>
+                <div class="divider"></div>
+                <p style="font-size: 0.8rem;">Design + Escopo + KPIs</p>
+            </div>
+            <div class="card-phase phase-1" style="text-align: center;">
+                <h4 style="color: #0891b2;">Fase 1</h4>
+                <p style="font-size: 1.8rem; color: #1e293b; margin: 8px 0;">6-10</p>
+                <p>semanas</p>
+                <div class="divider"></div>
+                <p style="font-size: 0.8rem;">Dados + APIs + Integração</p>
+            </div>
+            <div class="card-phase phase-2" style="text-align: center;">
+                <h4 style="color: #db2777;">Fase 2</h4>
+                <p style="font-size: 1.8rem; color: #1e293b; margin: 8px 0;">3-5</p>
+                <p>semanas</p>
+                <div class="divider"></div>
+                <p style="font-size: 0.8rem;">Ética + Segurança + LGPD</p>
+            </div>
+            <div class="card-phase phase-3" style="text-align: center;">
+                <h4 style="color: #059669;">Fase 3</h4>
+                <p style="font-size: 1.8rem; color: #1e293b; margin: 8px 0;">8-12</p>
+                <p>semanas</p>
+                <div class="divider"></div>
+                <p style="font-size: 0.8rem;">GenApp + Guard Rails + Testes</p>
+            </div>
+            <div class="card-phase phase-4" style="text-align: center;">
+                <h4 style="color: #d97706;">Fase 4</h4>
+                <p style="font-size: 1.8rem; color: #1e293b; margin: 8px 0;">4-6</p>
+                <p>semanas</p>
+                <div class="divider"></div>
+                <p style="font-size: 0.8rem;">Entrega + Monitoramento</p>
+            </div>
+        </div>
+        <br>
+        <div class="card" style="text-align: center;">
+            <p style="font-size: 1.2rem; color: #1e293b;">Tempo total estimado: <span class="accent" style="font-size: 1.5rem; font-weight: 700;">25 a 39 semanas</span> (6 a 9 meses)</p>
+            <p style="margin-top: 8px;">Fases 1 e 2 podem rodar em paralelo, reduzindo para ~5-7 meses em cenário otimizado.</p>
+        </div>
+    </div>
+    <div class="slide-number">14 / 16</div>
+</div>
+
+<!-- SLIDE 15: RISCOS -->
+<div class="slide" id="slide-15">
+    <h2>Riscos e <span class="warn">Mitigações</span></h2>
+    <div class="grid-2">
+        <div>
+            <h3>Riscos Principais</h3>
+            <ul>
+                <li>Qualidade dos dados de origem (bases desatualizadas)</li>
+                <li>Resistência institucional à mudança</li>
+                <li>Dependência de fornecedor único de LLM</li>
+                <li>Complexidade de integração com sistemas legados</li>
+                <li>Mudanças regulatórias (Marco Legal da IA)</li>
+                <li>Expectativas irrealistas de prazo/resultado</li>
+            </ul>
+        </div>
+        <div>
+            <h3>Estratégias de Mitigação</h3>
+            <ul>
+                <li>META5 valida qualidade antes de prosseguir</li>
+                <li>Gestão de mudança desde a Fase 0</li>
+                <li>Arquitetura multi-model (não depender de 1 LLM)</li>
+                <li>APIs como camada de abstração</li>
+                <li>Governança adaptativa com revisões trimestrais</li>
+                <li>KPIs realistas definidos com o gestor na Fase 0</li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <div class="card" style="border-left: 3px solid #d97706;">
+        <h4 style="color: #d97706;">Princípio de Segurança</h4>
+        <p>Em caso de dúvida, o sistema para e escala para decisão humana. Nenhum agente de IA toma decisão irreversível sobre a vida do cidadão sem validação.</p>
+    </div>
+    <div class="slide-number">15 / 16</div>
+</div>
+
+<!-- SLIDE 16: CONCLUSÃO -->
+<div class="slide" id="slide-16">
+    <h2>Próximos Passos</h2>
+    <div class="grid-2">
+        <div>
+            <p style="font-size: 1.3rem; color: #1e293b; line-height: 1.6;">O processo de geração de uma GenApp para política pública é <span class="highlight">estruturado, auditável e centrado no cidadão</span>.</p>
+            <br>
+            <p>Cada fase tem entradas, saídas e responsáveis claros. O ciclo de feedback garante melhoria contínua baseada em evidências.</p>
+            <br>
+            <h3>Para iniciar</h3>
+            <ul>
+                <li>Selecionar política pública piloto (alto impacto, baixo risco)</li>
+                <li>Ativar META3 para Fase 0 de prospecção</li>
+                <li>Definir Personas e KPIs com o gestor</li>
+                <li>Estabelecer governança e comitê de ética</li>
+                <li>Executar, medir, iterar</li>
+            </ul>
+        </div>
+        <div>
+            <div class="card" style="background: linear-gradient(135deg, #ecfeff, #f0f9ff);">
+                <h4 style="color: #0e7490; font-size: 1.1rem;">Resumo do Fluxo</h4>
+                <br>
+                <p style="color: #7c3aed;">0. Compreensão → Escopo + KPIs</p>
+                <br>
+                <p style="color: #0891b2;">1. Dados → Datasets + APIs</p>
+                <br>
+                <p style="color: #db2777;">2. Ética → Proteção + Fairness</p>
+                <br>
+                <p style="color: #059669;">3. Fábrica → GenApp funcionando</p>
+                <br>
+                <p style="color: #d97706;">4. Entrega → Cidadão atendido</p>
+                <br>
+                <p style="color: #1e293b;">🔄 Feedback → Ajuste contínuo</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">16 / 16</div>
+</div>
+
+<!-- NAVEGAÇÃO -->
+<div class="nav">
+    <button onclick="prevSlide()">← Anterior</button>
+    <button onclick="nextSlide()">Próximo →</button>
+</div>
+
+<script>
+    let current = 1;
+    const total = 16;
+
+    function showSlide(n) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById('slide-' + n).classList.add('active');
+        current = n;
+    }
+
+    function nextSlide() {
+        if (current < total) showSlide(current + 1);
+    }
+
+    function prevSlide() {
+        if (current > 1) showSlide(current - 1);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+    });
+</script>
+</body>
+</html>

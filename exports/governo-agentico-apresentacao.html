@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Governo Agêntico — Fluxo Processual</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #0f172a;
+        color: #f1f5f9;
+        overflow: hidden;
+        height: 100vh;
+      }
+      .slide {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 60px 80px;
+        position: relative;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .slide.active {
+        display: flex;
+      }
+      .slide-number {
+        position: absolute;
+        bottom: 30px;
+        right: 40px;
+        font-size: 14px;
+        color: #64748b;
+      }
+      .nav {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 100;
+      }
+      .nav button {
+        background: #1e293b;
+        border: 1px solid #334155;
+        color: #e2e8f0;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .nav button:hover {
+        background: #334155;
+        border-color: #6366f1;
+      }
+      h1 {
+        font-size: 3.2rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 20px;
+      }
+      h2 {
+        font-size: 2.4rem;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: #e2e8f0;
+      }
+      h3 {
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: #94a3b8;
+        margin-bottom: 16px;
+      }
+      p {
+        font-size: 1.3rem;
+        line-height: 1.7;
+        color: #cbd5e1;
+        max-width: 900px;
+      }
+      .accent {
+        color: #818cf8;
+      }
+      .highlight {
+        color: #34d399;
+      }
+      .warn {
+        color: #fbbf24;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #cbd5e1;
+        padding-left: 24px;
+        position: relative;
+        margin-bottom: 8px;
+      }
+      ul li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #818cf8;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 30px;
+      }
+      .card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 32px;
+      }
+      .card h4 {
+        font-size: 1.1rem;
+        color: #818cf8;
+        margin-bottom: 12px;
+      }
+      .card p {
+        font-size: 1rem;
+        color: #94a3b8;
+      }
+      .stat {
+        text-align: center;
+        padding: 24px;
+      }
+      .stat .number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #818cf8;
+      }
+      .stat .label {
+        font-size: 0.95rem;
+        color: #94a3b8;
+        margin-top: 8px;
+      }
+      .flow-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+      .flow-step {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 16px 20px;
+        font-size: 0.95rem;
+        color: #e2e8f0;
+        text-align: center;
+        min-width: 140px;
+      }
+      .flow-arrow {
+        color: #818cf8;
+        font-size: 1.5rem;
+      }
+      .subtitle {
+        font-size: 1.5rem;
+        color: #94a3b8;
+        margin-bottom: 40px;
+      }
+      .tag {
+        display: inline-block;
+        background: #312e81;
+        color: #a5b4fc;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-right: 8px;
+        margin-bottom: 8px;
+      }
+      .source {
+        font-size: 0.8rem;
+        color: #475569;
+        position: absolute;
+        bottom: 30px;
+        left: 80px;
+      }
+      .img-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #1e293b, #312e81);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+      .timeline {
+        position: relative;
+        padding-left: 40px;
+        margin-top: 20px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 12px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #334155;
+      }
+      .timeline-item {
+        position: relative;
+        margin-bottom: 24px;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -34px;
+        top: 8px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #818cf8;
+      }
+      .timeline-item h4 {
+        color: #e2e8f0;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+      .timeline-item p {
+        font-size: 0.95rem;
+        color: #94a3b8;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 16px 20px;
+        text-align: left;
+        border-bottom: 1px solid #1e293b;
+      }
+      .comparison-table th {
+        color: #818cf8;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .comparison-table td {
+        color: #cbd5e1;
+        font-size: 1rem;
+      }
+      .comparison-table tr:nth-child(even) {
+        background: #1e293b;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>
+
+<!-- SLIDE 1: CAPA -->
+<div class="slide active" id="slide-1">
+  <h3>Fluxo Processual</h3>
+  <h1>Governo <span class="accent">Agêntico</span></h1>
+  <p class="subtitle">
+    Da necessidade do agente público à entrega de valor ao cidadão — custos,
+    adesão e escala na era da IA autônoma
+  </p>
+  <div style="margin-top: 30px">
+    <span class="tag">IA Agêntica</span>
+    <span class="tag">Setor Público</span>
+    <span class="tag">Transformação Digital</span>
+    <span class="tag">Automação Inteligente</span>
+  </div>
+  <div class="slide-number">1 / 14</div>
+</div>
+
+<!-- SLIDE 2: AGENDA -->
+<div class="slide" id="slide-2">
+  <h2>Agenda</h2>
+  <ul>
+    <li>O que é Governo Agêntico</li>
+    <li>Contexto: do governo digital ao governo autônomo</li>
+    <li>Fluxo processual completo — da necessidade à entrega</li>
+    <li>Jornada do agente público</li>
+    <li>Arquitetura de decisão agêntica</li>
+    <li>Custos de implementação e ROI</li>
+    <li>Volume de usuários e escala</li>
+    <li>Medida de adesão e métricas</li>
+    <li>Casos reais e benchmarks internacionais</li>
+    <li>Riscos e governança</li>
+    <li>Roadmap de implementação</li>
+    <li>Conclusão e próximos passos</li>
+  </ul>
+  <div class="slide-number">2 / 14</div>
+</div>
+
+<!-- SLIDE 3: O QUE É -->
+<div class="slide" id="slide-3">
+  <h2>O que é <span class="accent">Governo Agêntico</span>?</h2>
+  <div class="grid-2">
+    <div>
+      <p>
+        Modelo de governança onde agentes de IA autônomos executam tarefas
+        complexas no setor público — desde triagem de demandas até decisões
+        operacionais — com supervisão humana estratégica.
+      </p>
+      <br />
+      <p style="font-size: 1.1rem">
+        Diferente de chatbots ou IA generativa simples, agentes agênticos podem
+        <span class="highlight">raciocinar, planejar e agir</span> de forma
+        independente em múltiplos sistemas.
+      </p>
+    </div>
+    <div>
+      <div class="card">
+        <h4>Definição (GovExec, 2026)</h4>
+        <p>
+          "Sistemas autônomos capazes de perseguir objetivos complexos,
+          raciocinar e tomar ações independentes em sistemas de software com
+          mínima supervisão humana."
+        </p>
+      </div>
+      <br />
+      <div class="card">
+        <h4>Diferencial</h4>
+        <p>
+          Não digitaliza burocracia — cria novos serviços que melhoram
+          resultados para o cidadão.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    Fonte: GovExec (Mai/2026); Deloitte Government Trends 2026
+  </div>
+  <div class="slide-number">3 / 14</div>
+</div>
+
+<!-- SLIDE 4: CONTEXTO -->
+<div class="slide" id="slide-4">
+  <h2>Do Governo Digital ao Governo <span class="accent">Autônomo</span></h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <h4>2019 — Governo Digital</h4>
+      <p>
+        Plataforma GOV.BR lançada com 20 milhões de usuários. Digitalização de
+        formulários.
+      </p>
+    </div>
+    <div class="timeline-item">
+      <h4>2022 — Governo Inteligente</h4>
+      <p>
+        IA para análise de dados, chatbots de atendimento, automação de
+        processos simples.
+      </p>
+    </div>
+    <div class="timeline-item">
+      <h4>2024 — IA Generativa no Setor Público</h4>
+      <p>
+        Plano Brasileiro de IA. Assistentes para redação, análise documental,
+        suporte ao servidor.
+      </p>
+    </div>
+    <div class="timeline-item">
+      <h4>2026 — Governo Agêntico</h4>
+      <p>
+        Agentes autônomos que executam fluxos completos: triagem → análise →
+        decisão → ação → monitoramento.
+      </p>
+    </div>
+  </div>
+  <div class="source">
+    Fonte: World Bank (2026); MCTI; Salesforce/IDC Government Survey (Mar/2026)
+  </div>
+  <div class="slide-number">4 / 14</div>
+</div>
+
+<!-- SLIDE 5: FLUXO PROCESSUAL -->
+<div class="slide" id="slide-5">
+  <h2>Fluxo Processual Completo</h2>
+  <h3>Da necessidade do agente público à finalização</h3>
+  <div class="flow-container">
+    <div class="flow-step">
+      1. Necessidade<br /><small style="color: #94a3b8"
+        >Servidor identifica demanda</small
+      >
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      2. Registro<br /><small style="color: #94a3b8">Input no sistema</small>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      3. Triagem IA<br /><small style="color: #94a3b8"
+        >Classificação automática</small
+      >
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      4. Análise Agêntica<br /><small style="color: #94a3b8"
+        >Pesquisa + raciocínio</small
+      >
+    </div>
+  </div>
+  <div class="flow-container" style="margin-top: 16px">
+    <div class="flow-step">
+      5. Proposta de Ação<br /><small style="color: #94a3b8"
+        >Recomendação estruturada</small
+      >
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      6. Validação Humana<br /><small style="color: #94a3b8"
+        >Aprovação do gestor</small
+      >
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      7. Execução<br /><small style="color: #94a3b8">Ação nos sistemas</small>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      8. Monitoramento<br /><small style="color: #94a3b8"
+        >Feedback + ajuste</small
+      >
+    </div>
+  </div>
+  <div class="slide-number">5 / 14</div>
+</div>
+
+<!-- SLIDE 6: JORNADA DO AGENTE PÚBLICO -->
+<div class="slide" id="slide-6">
+  <h2>Jornada do <span class="accent">Agente Público</span></h2>
+  <div class="grid-2">
+    <div>
+      <h3>Antes (modelo tradicional)</h3>
+      <ul>
+        <li>Identifica necessidade manualmente</li>
+        <li>Pesquisa legislação e precedentes (horas)</li>
+        <li>Redige parecer ou despacho</li>
+        <li>Encaminha para aprovação hierárquica</li>
+        <li>Aguarda retorno (dias/semanas)</li>
+        <li>Executa ação no sistema legado</li>
+        <li>Registra manualmente o resultado</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Depois (modelo agêntico)</h3>
+      <ul>
+        <li>Registra necessidade em linguagem natural</li>
+        <li>Agente pesquisa base legal em segundos</li>
+        <li>Agente gera minuta estruturada</li>
+        <li>Servidor valida e aprova com 1 clique</li>
+        <li>Execução automática cross-system</li>
+        <li>Monitoramento contínuo de resultado</li>
+        <li style="color: #34d399">Tempo: de semanas para minutos</li>
+      </ul>
+    </div>
+  </div>
+  <div class="source">
+    Fonte: Deloitte Government Trends 2026; BCG "Benefits of AI in Government"
+    (2025)
+  </div>
+  <div class="slide-number">6 / 14</div>
+</div>
+
+    <!-- SLIDE 7: ARQUITETURA DE DECISÃO -->
+    <div class="slide" id="slide-7">
+        <h2>Arquitetura de Decisão <span class="accent">Agêntica</span></h2>
+        <div class="grid-2">
+            <div>
+                <h3>Camadas do sistema</h3>
+                <ul>
+                    <li><span class="highlight">Camada de Percepção</span> — Captura demandas (NLP, OCR, formulários)</li>
+                    <li><span class="highlight">Camada de Raciocínio</span> — Análise contextual, base legal, precedentes</li>
+                    <li><span class="highlight">Camada de Planejamento</span> — Decomposição em subtarefas, priorização</li>
+                    <li><span class="highlight">Camada de Ação</span> — Execução em sistemas (APIs, bancos, workflows)</li>
+                    <li><span class="highlight">Camada de Supervisão</span> — Human-in-the-loop para decisões críticas</li>
+                </ul>
+            </div>
+            <div>
+                <div class="card">
+                    <h4>Princípio Central</h4>
+                    <p>Agentes não substituem o servidor público — amplificam sua capacidade de decisão. 89% dos líderes governamentais preveem humanos trabalhando lado a lado com agentes de IA.</p>
+                </div>
+                <br>
+                <div class="card">
+                    <h4>Governança</h4>
+                    <p>Toda decisão com impacto direto no cidadão passa por validação humana. Agentes operam em modo autônomo apenas para tarefas operacionais de baixo risco.</p>
+                </div>
+            </div>
+        </div>
+        <div class="source">Fonte: Salesforce/IDC Government Survey (Mar/2026) — 89% concordam com modelo humano + agente</div>
+        <div class="slide-number">7 / 14</div>
+    </div>
+
+    <!-- SLIDE 8: CUSTOS -->
+    <div class="slide" id="slide-8">
+        <h2>Custos de <span class="accent">Implementação</span></h2>
+        <div class="grid-3">
+            <div class="card stat">
+                <div class="number">35%</div>
+                <div class="label">Economia potencial em áreas impactadas em 10 anos</div>
+                <p style="font-size:0.8rem; margin-top:8px; color:#64748b;">BCG, 2025</p>
+            </div>
+            <div class="card stat">
+                <div class="number">45%</div>
+                <div class="label">Tempo economizado por semana por servidor com IA</div>
+                <p style="font-size:0.8rem; margin-top:8px; color:#64748b;">Salesforce/IDC, 2026</p>
+            </div>
+            <div class="card stat">
+                <div class="number">6.4h</div>
+                <div class="label">Horas recuperadas por semana por profissional</div>
+                <p style="font-size:0.8rem; margin-top:8px; color:#64748b;">McKinsey AI Survey, 2026</p>
+            </div>
+        </div>
+        <br>
+        <table class="comparison-table">
+            <tr>
+                <th>Componente</th>
+                <th>Custo Estimado</th>
+                <th>Retorno Esperado</th>
+            </tr>
+            <tr>
+                <td>Infraestrutura cloud + APIs de IA</td>
+                <td>R$ 2-8M / ano (por órgão médio)</td>
+                <td>Redução de 30-45% em tempo processual</td>
+            </tr>
+            <tr>
+                <td>Integração com sistemas legados</td>
+                <td>R$ 5-15M (investimento inicial)</td>
+                <td>Interoperabilidade cross-agency</td>
+            </tr>
+            <tr>
+                <td>Capacitação de servidores</td>
+                <td>R$ 500K-2M / ano</td>
+                <td>Adoção sustentável e governança</td>
+            </tr>
+            <tr>
+                <td>Governança e compliance (LGPD/IA)</td>
+                <td>R$ 1-3M / ano</td>
+                <td>Mitigação de riscos jurídicos</td>
+            </tr>
+        </table>
+        <div class="source">Fonte: BCG (2025); Google Cloud Public Sector ROI Survey (2026); estimativas baseadas em benchmarks internacionais</div>
+        <div class="slide-number">8 / 14</div>
+    </div>
+
+    <!-- SLIDE 9: VOLUME DE USUÁRIOS -->
+    <div class="slide" id="slide-9">
+        <h2>Volume de Usuários e <span class="accent">Escala</span></h2>
+        <div class="grid-2">
+            <div>
+                <div class="card stat">
+                    <div class="number">170M</div>
+                    <div class="label">Usuários na plataforma GOV.BR</div>
+                </div>
+                <br>
+                <div class="card stat">
+                    <div class="number">4.000+</div>
+                    <div class="label">Serviços federais digitalizados</div>
+                </div>
+            </div>
+            <div>
+                <div class="card stat">
+                    <div class="number">R$ 12,98 Bi</div>
+                    <div class="label">Economia gerada pela identidade digital</div>
+                </div>
+                <br>
+                <div class="card stat">
+                    <div class="number">370M</div>
+                    <div class="label">Assinaturas digitais realizadas</div>
+                </div>
+            </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.1rem;">A base de 170 milhões de usuários do GOV.BR representa a maior plataforma de governo digital da América Latina — e a infraestrutura pronta para receber agentes autônomos em escala nacional.</p>
+        <div class="source">Fonte: World Bank / Digital Government Secretariat (2026)</div>
+        <div class="slide-number">9 / 14</div>
+    </div>
+
+    <!-- SLIDE 10: MEDIDA DE ADESÃO -->
+    <div class="slide" id="slide-10">
+        <h2>Medida de <span class="accent">Adesão</span></h2>
+        <div class="grid-2">
+            <div>
+                <h3>Métricas de sucesso</h3>
+                <ul>
+                    <li>Taxa de adoção por servidores (meta: 70% em 24 meses)</li>
+                    <li>Tempo médio de resolução de demandas</li>
+                    <li>Satisfação do cidadão (NPS pós-atendimento)</li>
+                    <li>Volume de decisões assistidas vs. manuais</li>
+                    <li>Taxa de erro em processos automatizados</li>
+                    <li>Custo por transação (antes vs. depois)</li>
+                </ul>
+            </div>
+            <div>
+                <div class="card">
+                    <h4>Dados Globais de Adesão (2026)</h4>
+                    <p><span class="highlight">82%</span> dos órgãos governamentais dos EUA já adotaram agentes de IA</p>
+                    <br>
+                    <p><span class="highlight">71%</span> planejam aumentar o uso de IA agêntica no próximo ano</p>
+                    <br>
+                    <p><span class="highlight">61%</span> dos líderes públicos alocam 50%+ do orçamento de IA para agentes</p>
+                </div>
+            </div>
+        </div>
+        <div class="source">Fonte: Salesforce/IDC (Mar/2026); Google Cloud Public Sector Survey (2026)</div>
+        <div class="slide-number">10 / 14</div>
+    </div>
+
+    <!-- SLIDE 11: BENCHMARKS INTERNACIONAIS -->
+    <div class="slide" id="slide-11">
+        <h2>Casos Reais e <span class="accent">Benchmarks</span></h2>
+        <div class="grid-3">
+            <div class="card">
+                <h4>🇮🇪 Irlanda — MyWelfare</h4>
+                <p>83% dos pedidos de auxílio-doença e 98% dos benefícios de tratamento aprovados automaticamente por IA.</p>
+            </div>
+            <div class="card">
+                <h4>🇪🇪 Estônia — X-Road</h4>
+                <p>Plataforma de troca de dados implantada em 20+ países. Dados criptografados, assinados e auditados em tempo real.</p>
+            </div>
+            <div class="card">
+                <h4>🇪🇺 UE — Once-Only System</h4>
+                <p>Cidadãos não precisam reapresentar documentos entre países. Verificação cruzada automática entre agências.</p>
+            </div>
+            <div class="card">
+                <h4>🇧🇷 Brasil — GOV.BR</h4>
+                <p>De 20M para 170M de usuários em 5 anos. R$ 12,98 Bi em economia. Base pronta para camada agêntica.</p>
+            </div>
+            <div class="card">
+                <h4>🇸🇬 Singapura — APEX</h4>
+                <p>Exchange nacional de dados com APIs seguras. Modelo de referência para interoperabilidade governamental.</p>
+            </div>
+            <div class="card">
+                <h4>🇺🇸 EUA — Federal AI Priority</h4>
+                <p>IA agêntica como prioridade federal em 2026. Foco em detecção de fraude (44%) e cibersegurança (36%).</p>
+            </div>
+        </div>
+        <div class="source">Fonte: Deloitte Government Trends 2026; World Bank; Salesforce/IDC Survey</div>
+        <div class="slide-number">11 / 14</div>
+    </div>
+
+    <!-- SLIDE 12: RISCOS E GOVERNANÇA -->
+    <div class="slide" id="slide-12">
+        <h2>Riscos e <span class="warn">Governança</span></h2>
+        <div class="grid-2">
+            <div>
+                <h3>Riscos Críticos</h3>
+                <ul>
+                    <li>Viés algorítmico em decisões que afetam cidadãos</li>
+                    <li>Falta de explicabilidade (black box)</li>
+                    <li>Dependência de fornecedores de IA (vendor lock-in)</li>
+                    <li>Segurança de dados sensíveis (LGPD)</li>
+                    <li>Resistência cultural dos servidores</li>
+                    <li>Confiabilidade: agentes multi-step têm ~35% de acurácia em tarefas complexas</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Mitigações</h3>
+                <ul>
+                    <li>Framework ético obrigatório (Serpro/ENAP, 2025)</li>
+                    <li>Human-in-the-loop para decisões de alto impacto</li>
+                    <li>Auditoria contínua de outputs dos agentes</li>
+                    <li>Transparência: cidadão sabe quando interage com IA</li>
+                    <li>Capacitação massiva + gestão de mudança</li>
+                    <li>Começar por tarefas operacionais de baixo risco</li>
+                </ul>
+            </div>
+        </div>
+        <div class="source">Fonte: Serpro (2025); WEF (Jan/2026); Gartner/Forrester Reality Check (2026)</div>
+        <div class="slide-number">12 / 14</div>
+    </div>
+
+    <!-- SLIDE 13: ROADMAP -->
+    <div class="slide" id="slide-13">
+        <h2>Roadmap de <span class="accent">Implementação</span></h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>Fase 1 — Fundação (0-6 meses)</h4>
+                <p>Mapeamento de processos, integração de dados, definição de governança IA, pilotos em áreas de baixo risco (triagem documental, FAQ inteligente)</p>
+            </div>
+            <div class="timeline-item">
+                <h4>Fase 2 — Expansão (6-18 meses)</h4>
+                <p>Agentes para processos completos (benefícios, licenças, pareceres), human-in-the-loop, métricas de adesão, capacitação de servidores</p>
+            </div>
+            <div class="timeline-item">
+                <h4>Fase 3 — Autonomia Supervisionada (18-36 meses)</h4>
+                <p>Agentes autônomos para decisões operacionais, cross-agency orchestration, personalização de serviços ao cidadão, escala nacional</p>
+            </div>
+            <div class="timeline-item">
+                <h4>Fase 4 — Governo Proativo (36+ meses)</h4>
+                <p>Antecipação de necessidades do cidadão, serviços preditivos, orquestração multi-agente entre esferas (federal, estadual, municipal)</p>
+            </div>
+        </div>
+        <div class="slide-number">13 / 14</div>
+    </div>
+
+    <!-- SLIDE 14: CONCLUSÃO -->
+    <div class="slide" id="slide-14">
+        <h2>Conclusão</h2>
+        <div class="grid-2">
+            <div>
+                <p style="font-size: 1.4rem; color: #e2e8f0; line-height: 1.6;">O Governo Agêntico não é ficção científica — é a evolução natural de uma infraestrutura digital que já atende <span class="highlight">170 milhões de brasileiros</span>.</p>
+                <br>
+                <p>A questão não é <em>se</em> vai acontecer, mas <em>quem</em> vai liderar a transição com responsabilidade, governança e foco no cidadão.</p>
+                <br>
+                <h3>Próximos passos</h3>
+                <ul>
+                    <li>Definir pilotos em áreas de alto volume e baixo risco</li>
+                    <li>Estabelecer framework de governança IA</li>
+                    <li>Capacitar servidores como supervisores de agentes</li>
+                    <li>Medir, iterar, escalar</li>
+                </ul>
+            </div>
+            <div>
+                <div class="card" style="background: linear-gradient(135deg, #1e1b4b, #312e81);">
+                    <h4 style="color: #a5b4fc; font-size: 1.2rem;">Visão 2030</h4>
+                    <br>
+                    <p style="color: #c7d2fe; font-size: 1.1rem;">"O futuro do setor público envolve humanos trabalhando lado a lado com agentes de IA — 74% dos líderes esperam que a maioria dos servidores terá um agente de IA reportando a eles nos próximos 5 anos."</p>
+                    <br>
+                    <p style="color: #818cf8; font-size: 0.9rem;">— Salesforce/IDC, Março 2026</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">14 / 14</div>
+    </div>
+
+    <!-- NAVEGAÇÃO -->
+    <div class="nav">
+        <button onclick="prevSlide()">← Anterior</button>
+        <button onclick="nextSlide()">Próximo →</button>
+    </div>
+
+    <script>
+        let current = 1;
+        const total = 14;
+
+        function showSlide(n) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById('slide-' + n).classList.add('active');
+            current = n;
+        }
+
+        function nextSlide() {
+            if (current < total) showSlide(current + 1);
+        }
+
+        function prevSlide() {
+            if (current > 1) showSlide(current - 1);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+        });
+    </script>
+</body>
+</html>

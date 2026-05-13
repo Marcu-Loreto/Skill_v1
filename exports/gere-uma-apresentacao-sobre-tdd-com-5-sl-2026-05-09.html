@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação sobre TDD</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .active {
+            display: block;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        button {
+            background-color: #06b6d4;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #34d399;
+        }
+        h1, h2 {
+            color: #34d399;
+        }
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide active" id="slide-1">
+    <h1>Desenvolvimento Orientado a Testes (TDD) 🚀</h1>
+    <h2>Uma abordagem para garantir a qualidade do software</h2>
+    <p>Tags: TDD, Testes, Desenvolvimento, Qualidade</p>
+</div>
+
+<div class="slide" id="slide-2">
+    <h2>O que é TDD? 📜</h2>
+    <ul>
+        <li>Prática de desenvolvimento ágil (World Bank, 2016)</li>
+        <li>Foco em testes antes da implementação</li>
+        <li>Melhora a qualidade do código</li>
+        <li>Reduz bugs e falhas (OECD, 2025)</li>
+        <li>Promove a documentação do código</li>
+    </ul>
+</div>
+
+<div class="slide" id="slide-3">
+    <h2>Benefícios do TDD 🌟</h2>
+    <div class="container">
+        <div class="card">
+            <h3>📈 Aumento de qualidade</h3>
+            <p>Menor número de falhas em produção.</p>
+        </div>
+        <div class="card">
+            <h3>⚡️ Desenvolvimento mais rápido</h3>
+            <p>Feedback imediato durante o desenvolvimento.</p>
+        </div>
+        <div class="card">
+            <h3>📚 Melhoria na manutenção</h3>
+            <p>Código mais limpo e fácil de entender.</p>
+        </div>
+    </div>
+</div>
+
+<div class="slide" id="slide-4">
+    <h2>Desafios do TDD ⚠️</h2>
+    <ul>
+        <li>Curva de aprendizado inicial alta</li>
+        <li>Requer disciplina e comprometimento</li>
+        <li>Nem todos os projetos se adaptam bem</li>
+        <li>Testes podem se tornar complexos</li>
+        <li>Necessidade de tempo para escrever testes</li>
+    </ul>
+</div>
+
+<div class="slide" id="slide-5">
+    <h2>Próximos Passos 🔍</h2>
+    <ul>
+        <li>Implementar TDD em projetos pequenos</li>
+        <li>Treinamento para a equipe de desenvolvimento</li>
+        <li>Documentar processos e resultados</li>
+        <li>Avaliar a eficácia da abordagem</li>
+        <li>Compartilhar aprendizados com a comunidade</li>
+    </ul>
+</div>
+
+<div class="navigation">
+    <button onclick="prevSlide()">← Anterior</button>
+    <button onclick="nextSlide()">Próximo →</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (index + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight') {
+            nextSlide();
+        } else if (event.key === 'ArrowLeft') {
+            prevSlide();
+        }
+    });
+</script>
+
+</body>
+</html>

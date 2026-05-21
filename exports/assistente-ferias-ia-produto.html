@@ -270,25 +270,8 @@
       </div>
       <div class="slide-number">4 / 13</div>
     </div>
-    <!-- SLIDE 5: FUNCIONALIDADES -->
+    <!-- SLIDE 5: EXPERIÊNCIA DO USUÁRIO -->
     <div class="slide" id="slide-5">
-      <h2>Funcionalidades <span class="accent">Implementadas</span></h2>
-      <div class="grid-3">
-        <div class="card"><h4>🔍 RAG</h4><p>Busca semântica na política de férias. Retorna trechos relevantes com score de confiança. Filtra resultados abaixo do threshold.</p></div>
-        <div class="card"><h4>✍️ Query Rewriting</h4><p>Reescrita automática da pergunta para melhorar a busca. Melhora o score de similaridade em ~10 pontos percentuais.</p></div>
-        <div class="card"><h4>🛡️ Guardrails</h4><p>Proteção contra prompt injection e vazamento de instruções internas. Validação de input E output.</p></div>
-        <div class="card"><h4>🧠 Memória Conversacional</h4><p>Janela deslizante de 8 mensagens. Mantém contexto da conversa sem perder informações pessoais (nome, situação).</p></div>
-        <div class="card"><h4>📊 Métricas em Tempo Real</h4><p>Tokens consumidos, tempo de resposta, scores RAG — visíveis na sidebar a cada interação.</p></div>
-        <div class="card"><h4>🗄️ Banco de Métricas</h4><p>SQLite registra cada thread e mensagem. Flags automáticas: transbordo (redirecionou para humano) e fora do escopo.</p></div>
-        <div class="card"><h4>💬 Interface Chat Web</h4><p>Streamlit com chat natural. Recursos cacheados para performance. Thread por sessão.</p></div>
-        <div class="card"><h4>📋 Backoffice Admin</h4><p>Painel com métricas globais, tabela de atendimentos, gráficos de uso e timeline detalhada por conversa.</p></div>
-        <div class="card"><h4>🐳 Deploy Docker</h4><p>Dockerfile + docker-compose pronto para EasyPanel. Healthcheck configurado. Deploy em minutos.</p></div>
-      </div>
-      <div class="slide-number">5 / 13</div>
-    </div>
-
-    <!-- SLIDE 6: DEMO VISUAL -->
-    <div class="slide" id="slide-6">
       <h2>Experiência do <span class="accent">Usuário</span></h2>
       <div class="grid-2">
         <div>
@@ -312,10 +295,36 @@
           </div>
         </div>
       </div>
-      <div class="slide-number">6 / 13</div>
+      <div class="slide-number">5 / 14</div>
     </div>
-    <!-- SLIDE 7: BACKOFFICE -->
+
+    <!-- SLIDE 6: ARQUITETURA DO AGENTE (IMAGEM) -->
+    <div class="slide" id="slide-6">
+      <h2>Arquitetura do <span class="accent">Agente</span> com IA Generativa</h2>
+      <div style="display: flex; justify-content: center; align-items: center; height: 80%;">
+        <img src="arquitetura-agente-ia-generativa.png" alt="Arquitetura de Agente com IA Generativa, Guardrails, RAG, Ferramentas e Observabilidade" style="max-width: 95%; max-height: 85vh; border-radius: 12px; border: 1px solid #334155;" />
+      </div>
+      <div class="slide-number">6 / 14</div>
+    </div>
+
+    <!-- SLIDE 7: FUNCIONALIDADES -->
     <div class="slide" id="slide-7">
+      <h2>Funcionalidades <span class="accent">Implementadas</span></h2>
+      <div class="grid-3">
+        <div class="card"><h4>🔍 RAG</h4><p>Busca semântica na política de férias. Retorna trechos relevantes com score de confiança. Filtra resultados abaixo do threshold.</p></div>
+        <div class="card"><h4>✍️ Query Rewriting</h4><p>Reescrita automática da pergunta para melhorar a busca. Melhora o score de similaridade em ~10 pontos percentuais.</p></div>
+        <div class="card"><h4>🛡️ Guardrails</h4><p>Proteção contra prompt injection e vazamento de instruções internas. Validação de input E output.</p></div>
+        <div class="card"><h4>🧠 Memória Conversacional</h4><p>Janela deslizante de 8 mensagens. Mantém contexto da conversa sem perder informações pessoais (nome, situação).</p></div>
+        <div class="card"><h4>📊 Métricas em Tempo Real</h4><p>Tokens consumidos, tempo de resposta, scores RAG — visíveis na sidebar a cada interação.</p></div>
+        <div class="card"><h4>🗄️ Banco de Métricas</h4><p>SQLite registra cada thread e mensagem. Flags automáticas: transbordo (redirecionou para humano) e fora do escopo.</p></div>
+        <div class="card"><h4>💬 Interface Chat Web</h4><p>Streamlit com chat natural. Recursos cacheados para performance. Thread por sessão.</p></div>
+        <div class="card"><h4>📋 Backoffice Admin</h4><p>Painel com métricas globais, tabela de atendimentos, gráficos de uso e timeline detalhada por conversa.</p></div>
+        <div class="card"><h4>🐳 Deploy Docker</h4><p>Dockerfile + docker-compose pronto para EasyPanel. Healthcheck configurado. Deploy em minutos.</p></div>
+      </div>
+      <div class="slide-number">7 / 14</div>
+    </div>
+    <!-- SLIDE 8: BACKOFFICE -->
+    <div class="slide" id="slide-8">
       <h2>Painel <span class="accent">Administrativo</span> (Backoffice)</h2>
       <div class="grid-2">
         <div>
@@ -348,11 +357,11 @@
           </div>
         </div>
       </div>
-      <div class="slide-number">7 / 13</div>
+      <div class="slide-number">8 / 14</div>
     </div>
 
-    <!-- SLIDE 8: SEPARADOR TÉCNICO -->
-    <div class="slide" id="slide-8">
+    <!-- SLIDE 9: SEPARADOR TÉCNICO -->
+    <div class="slide" id="slide-9">
       <div style="text-align: center">
         <h3 style="color: #64748b; margin-bottom: 20px">Detalhamento Técnico</h3>
         <h1>Arquitetura e <span class="accent">Implementação</span></h1>
@@ -368,10 +377,10 @@
           <span class="tech-badge">EasyPanel</span>
         </div>
       </div>
-      <div class="slide-number">8 / 13</div>
+      <div class="slide-number">9 / 14</div>
     </div>
-    <!-- SLIDE 9: DIAGRAMA DE ARQUITETURA (NOVO) -->
-    <div class="slide" id="slide-9">
+    <!-- SLIDE 10: DIAGRAMA DE ARQUITETURA -->
+    <div class="slide" id="slide-10">
       <h2>Desenho da <span class="accent">Arquitetura</span></h2>
       <div class="arch-container">
         <!-- Camada de Interface -->
@@ -428,10 +437,10 @@
           </div>
         </div>
       </div>
-      <div class="slide-number">9 / 13</div>
+      <div class="slide-number">10 / 14</div>
     </div>
-    <!-- SLIDE 10: ARQUITETURA RAG -->
-    <div class="slide" id="slide-10">
+    <!-- SLIDE 11: ARQUITETURA RAG -->
+    <div class="slide" id="slide-11">
       <h2>Arquitetura <span class="accent">RAG</span> — Retrieval-Augmented Generation</h2>
       <div class="grid-2">
         <div>
@@ -457,11 +466,11 @@
           </div>
         </div>
       </div>
-      <div class="slide-number">10 / 13</div>
+      <div class="slide-number">11 / 14</div>
     </div>
 
-    <!-- SLIDE 11: GUARDRAILS E SEGURANÇA -->
-    <div class="slide" id="slide-11">
+    <!-- SLIDE 12: GUARDRAILS E SEGURANÇA -->
+    <div class="slide" id="slide-12">
       <h2>Guardrails e <span class="yellow">Segurança</span></h2>
       <div class="grid-2">
         <div>
@@ -477,10 +486,10 @@
           <div class="card" style="border-left: 3px solid #34d399;"><h4 style="color: #34d399;">Resultado</h4><p>Dupla camada de proteção: input bloqueia ataques, output impede vazamentos. O modelo nunca opera sem supervisão algorítmica.</p></div>
         </div>
       </div>
-      <div class="slide-number">11 / 13</div>
+      <div class="slide-number">12 / 14</div>
     </div>
-    <!-- SLIDE 12: MÉTRICAS E OBSERVABILIDADE -->
-    <div class="slide" id="slide-12">
+    <!-- SLIDE 13: MÉTRICAS E OBSERVABILIDADE -->
+    <div class="slide" id="slide-13">
       <h2>Observabilidade e <span class="accent">Métricas</span></h2>
       <div class="grid-2">
         <div>
@@ -509,11 +518,11 @@
           </div>
         </div>
       </div>
-      <div class="slide-number">12 / 13</div>
+      <div class="slide-number">13 / 14</div>
     </div>
 
-    <!-- SLIDE 13: DEPLOY E EVOLUÇÃO -->
-    <div class="slide" id="slide-13">
+    <!-- SLIDE 14: DEPLOY E EVOLUÇÃO -->
+    <div class="slide" id="slide-14">
       <h2>Deploy e <span class="accent">Evolução</span></h2>
       <div class="grid-2">
         <div>
@@ -546,7 +555,7 @@
           <div class="card" style="border-left: 3px solid #34d399;"><h4 style="color: #34d399;">Escalabilidade</h4><p>A arquitetura RAG é modular. Adicionar um novo tema = adicionar um documento + reindexar. Sem retreinar, sem código novo.</p></div>
         </div>
       </div>
-      <div class="slide-number">13 / 13</div>
+      <div class="slide-number">14 / 14</div>
     </div>
     <!-- NAVEGAÇÃO -->
     <div class="nav">
@@ -555,7 +564,7 @@
     </div>
 
     <script>
-      let current = 1; const total = 13;
+      let current = 1; const total = 14;
       function showSlide(n) { document.querySelectorAll('.slide').forEach(s => s.classList.remove('active')); document.getElementById('slide-' + n).classList.add('active'); current = n; }
       function nextSlide() { if (current < total) showSlide(current + 1); }
       function prevSlide() { if (current > 1) showSlide(current - 1); }

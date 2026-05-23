@@ -1,0 +1,597 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segurança Pública em Colapso — Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0e1a; color: #f1f5f9; overflow: hidden; }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    padding: 60px 80px;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 0; left: 0;
+  }
+  .slide.active { display: flex; }
+
+  /* CAPA */
+  .slide-cover {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f172a 50%, #0a1628 100%);
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .slide-cover .tag {
+    background: #22d3ee22;
+    border: 1px solid #22d3ee55;
+    color: #22d3ee;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    display: inline-block;
+  }
+  .slide-cover h1 {
+    font-size: 70px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #f1f5f9;
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+  .slide-cover h1 span { color: #22d3ee; }
+  .slide-cover p {
+    font-size: 24px;
+    color: #94a3b8;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+  .cover-accent {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #22d3ee18 0%, transparent 70%);
+    border: 1px solid #22d3ee22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+  }
+
+  /* SLIDES DE DOR */
+  .slide-pain {
+    background: #0f172a;
+  }
+  .pain-label {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #ef4444;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pain-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    background: #ef4444;
+  }
+  .slide-pain h2 {
+    font-size: 50px;
+    font-weight: 800;
+    color: #f1f5f9;
+    line-height: 1.2;
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+  .slide-pain h2 span { color: #22d3ee; }
+
+  .stats-row {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 24px 32px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6);
+  }
+  .stat-card.red::before { background: linear-gradient(90deg, #ef4444, #f97316); }
+  .stat-card.yellow::before { background: linear-gradient(90deg, #f59e0b, #eab308); }
+  .stat-card .number {
+    font-size: 48px;
+    font-weight: 800;
+    color: #22d3ee;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-card.red .number { color: #ef4444; }
+  .stat-card.yellow .number { color: #f59e0b; }
+  .stat-card .label {
+    font-size: 17px;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  .insight-box {
+    background: #1e293b;
+    border-left: 4px solid #22d3ee;
+    border-radius: 0 8px 8px 0;
+    padding: 20px 28px;
+    font-size: 19px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    max-width: 860px;
+  }
+  .insight-box.red { border-left-color: #ef4444; }
+  .insight-box strong { color: #f1f5f9; }
+
+  .bullet-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 860px;
+  }
+  .bullet-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-size: 20px;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+  .bullet-list li .icon {
+    font-size: 26px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .bullet-list li strong { color: #f1f5f9; }
+
+  /* SLIDE CTA */
+  .slide-cta {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f172a 100%);
+    align-items: center;
+    text-align: center;
+  }
+  .slide-cta h2 {
+    font-size: 58px;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .slide-cta h2 span { color: #22d3ee; }
+  .slide-cta p {
+    font-size: 24px;
+    color: #94a3b8;
+    max-width: 640px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cta-pills {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-size: 18px;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22d3ee;
+    flex-shrink: 0;
+  }
+
+  /* NAVEGAÇÃO */
+  .nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+  }
+  .nav button {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav button:hover { background: #22d3ee; border-color: #22d3ee; color: #0a0e1a; }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+  .nav .counter {
+    font-size: 13px;
+    color: #64748b;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* SLIDE NUMBER */
+  .slide-num {
+    position: fixed;
+    top: 28px;
+    right: 40px;
+    font-size: 12px;
+    color: #334155;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  /* PROGRESS BAR */
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6);
+    transition: width 0.3s ease;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="slide-num" id="slideNum"></div>
+
+<div class="deck">
+
+  <!-- SLIDE 1: CAPA -->
+  <div class="slide slide-cover active" id="slide-1">
+    <div class="tag">Pitch Deck · Problema</div>
+    <h1>Segurança Pública<br><span>em Colapso Silencioso</span></h1>
+    <p>Os números de emergência do Brasil falham todos os dias — e ninguém está medindo o custo real disso.</p>
+    <div class="cover-accent">🚨</div>
+  </div>
+
+  <!-- SLIDE 2: DOR 1 — TROTES -->
+  <div class="slide slide-pain" id="slide-2">
+    <div class="pain-label">Dor 1 — Trotes</div>
+    <h2>Milhares de chamadas falsas<br><span>drenam o sistema todo dia</span></h2>
+    <div class="stats-row">
+      <div class="stat-card red">
+        <div class="number">360+</div>
+        <div class="label">trotes por dia só no Rio de Janeiro (2025)</div>
+      </div>
+      <div class="stat-card red">
+        <div class="number">10%</div>
+        <div class="label">das ligações na Bahia são trotes (jan–abr 2026)</div>
+      </div>
+      <div class="stat-card red">
+        <div class="number">30%</div>
+        <div class="label">das chamadas no Pará eram falsas em 2022</div>
+      </div>
+    </div>
+    <div class="insight-box red">
+      Cada trote não é apenas uma ligação perdida — é uma <strong>viatura deslocada, um atendente bloqueado e uma vida real sem socorro</strong>.
+    </div>
+  </div>
+
+  <!-- SLIDE 3: DOR 2 — CUSTO FINANCEIRO -->
+  <div class="slide slide-pain" id="slide-3">
+    <div class="pain-label">Dor 2 — Custo Financeiro</div>
+    <h2>R$ 1 bilhão desperdiçado<br><span>por ano com chamadas falsas</span></h2>
+    <div class="stats-row">
+      <div class="stat-card red">
+        <div class="number">R$ 1 bi</div>
+        <div class="label">prejuízo anual estimado pelo Senado Federal</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="number">20%</div>
+        <div class="label">dos chamados ao SAMU em Porto Alegre são enganos ou trotes</div>
+      </div>
+    </div>
+    <ul class="bullet-list">
+      <li><span class="icon">⛽</span><span><strong>Combustível desperdiçado</strong> em deslocamentos inúteis de viaturas</span></li>
+      <li><span class="icon">🔧</span><span><strong>Desgaste acelerado</strong> de equipamentos e frotas de emergência</span></li>
+      <li><span class="icon">👮</span><span><strong>Horas de profissionais</strong> mobilizados para ocorrências inexistentes</span></li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 4: DOR 3 — INDISPONIBILIDADE DE VIATURAS -->
+  <div class="slide slide-pain" id="slide-4">
+    <div class="pain-label">Dor 3 — Indisponibilidade de Viaturas</div>
+    <h2>A viatura está ocupada.<br><span>Mas ninguém sabe onde ela está.</span></h2>
+    <ul class="bullet-list" style="margin-bottom: 36px;">
+      <li><span class="icon">🗺️</span><span>Centrais de despacho <strong>não têm visibilidade em tempo real</strong> da posição e status de cada viatura</span></li>
+      <li><span class="icon">📞</span><span>O atendente decide o despacho <strong>com base em informação desatualizada</strong> ou por rádio manual</span></li>
+      <li><span class="icon">⏱️</span><span>Minutos perdidos na busca pela viatura mais próxima disponível <strong>custam vidas em emergências reais</strong></span></li>
+      <li><span class="icon">🔄</span><span>Viaturas ocupadas com trotes ficam <strong>indisponíveis para ocorrências legítimas</strong> simultâneas</span></li>
+    </ul>
+    <div class="insight-box">
+      Em emergências cardíacas, cada minuto sem atendimento reduz em <strong>10% a chance de sobrevivência</strong>. A falta de rastreamento em tempo real é um problema de vida ou morte.
+    </div>
+  </div>
+
+  <!-- SLIDE 5: DOR 4 — PROBLEMA DO ATENDENTE -->
+  <div class="slide slide-pain" id="slide-5">
+    <div class="pain-label">Dor 4 — O Atendente no Limite</div>
+    <h2>O elo mais fraco do sistema<br><span>é humano — e está sobrecarregado</span></h2>
+    <ul class="bullet-list" style="margin-bottom: 36px;">
+      <li><span class="icon">🧠</span><span>Atendentes tomam <strong>decisões críticas sob pressão extrema</strong>, sem suporte de dados em tempo real</span></li>
+      <li><span class="icon">��</span><span>Filtrar trotes exige <strong>treinamento contínuo e experiência</strong> — recurso escasso e caro</span></li>
+      <li><span class="icon">😤</span><span>Assédio verbal e trotes elaborados <strong>causam esgotamento e alta rotatividade</strong> nas equipes</span></li>
+      <li><span class="icon">📋</span><span>Sem sistema inteligente de triagem, <strong>cada ligação depende 100% do julgamento humano</strong></span></li>
+    </ul>
+    <div class="insight-box red">
+      Projetos como "Alozinho" (Amapá) reduziram trotes em <strong>35%</strong> com educação — mas a tecnologia de triagem inteligente ainda é praticamente <strong>inexistente nas centrais brasileiras</strong>.
+    </div>
+  </div>
+
+  <!-- SLIDE 6: SOLUÇÃO — APRESENTAÇÃO -->
+  <div class="slide slide-pain" id="slide-6" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="pain-label" style="color: #22d3ee;">Solução</div>
+    <h2 style="color: #f1f5f9;">VozGuard<br><span style="color: #22d3ee;">Plataforma inteligente de triagem e resposta</span></h2>
+    <p style="font-size: 23px; color: #cbd5e1; line-height: 1.7; max-width: 860px; margin-bottom: 40px;">
+      Uma plataforma inteligente de triagem e resposta a emergências em tempo real, projetada para <strong style="color: #f1f5f9;">blindar os centros de atendimento contra trotes</strong> e reduzir drasticamente o tempo de resposta no salvamento de vidas.
+    </p>
+    <div class="stats-row">
+      <div class="stat-card" style="background: #1e293b; border-color: #22d3ee44;">
+        <div class="number" style="color: #22d3ee;">4</div>
+        <div class="label">frentes de ação integradas</div>
+      </div>
+      <div class="stat-card" style="background: #1e293b; border-color: #22d3ee44;">
+        <div class="number" style="color: #22d3ee;">100%</div>
+        <div class="label">das chamadas analisadas em tempo real</div>
+      </div>
+      <div class="stat-card" style="background: #1e293b; border-color: #22d3ee44;">
+        <div class="number" style="color: #22d3ee;">Segundos</div>
+        <div class="label">para despacho inteligente de viaturas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: SOLUÇÃO — FUNCIONALIDADES PARTE 1 -->
+  <div class="slide slide-pain" id="slide-7" style="background: #0f172a;">
+    <div class="pain-label" style="color: #22d3ee;">Como Funciona</div>
+    <h2 style="font-size: 46px;">Tecnologia em ação<br><span>contra as 4 dores identificadas</span></h2>
+    
+    <div style="display: flex; flex-direction: column; gap: 28px; margin-top: 32px;">
+      <!-- Feature 1 -->
+      <div style="background: #1e293b; border-left: 4px solid #22d3ee; border-radius: 0 12px 12px 0; padding: 24px 32px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="font-size: 32px;">🛡️</span>
+          <h3 style="font-size: 26px; font-weight: 700; color: #22d3ee;">1. Filtro Inteligente Anti-Trote</h3>
+        </div>
+        <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 10px;">
+          <strong style="color: #f1f5f9;">Como funciona:</strong> Assistentes digitais silenciosos analisam a fala do solicitante em tempo real — tom emocional (medo, frustração, ironia), histórico do número e ruídos de fundo.
+        </p>
+        <p style="font-size: 19px; color: #94a3b8; line-height: 1.6;">
+          <strong style="color: #22d3ee;">Benefício:</strong> Alertas instantâneos de "alta probabilidade de trote" permitem que operadores foquem apenas em emergências reais.
+        </p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div style="background: #1e293b; border-left: 4px solid #3b82f6; border-radius: 0 12px 12px 0; padding: 24px 32px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="font-size: 32px;">🚁</span>
+          <h3 style="font-size: 26px; font-weight: 700; color: #3b82f6;">2. Despacho Inteligente e Rastreamento</h3>
+        </div>
+        <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 10px;">
+          <strong style="color: #f1f5f9;">Como funciona:</strong> Monitoramento contínuo da posição geográfica de todas as viaturas. Cálculo automático da rota mais rápida considerando trânsito em tempo real.
+        </p>
+        <p style="font-size: 19px; color: #94a3b8; line-height: 1.6;">
+          <strong style="color: #3b82f6;">Benefício:</strong> Elimina triagem manual e comunicação via rádio — socorro enviado em segundos pelo caminho mais rápido.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: SOLUÇÃO — FUNCIONALIDADES PARTE 2 -->
+  <div class="slide slide-pain" id="slide-8" style="background: #0f172a;">
+    <div class="pain-label" style="color: #22d3ee;">Como Funciona</div>
+    <h2 style="font-size: 46px;">Transparência e controle<br><span>para cidadão e operador</span></h2>
+    
+    <div style="display: flex; flex-direction: column; gap: 28px; margin-top: 32px;">
+      <!-- Feature 3 -->
+      <div style="background: #1e293b; border-left: 4px solid #8b5cf6; border-radius: 0 12px 12px 0; padding: 24px 32px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="font-size: 32px;">📍</span>
+          <h3 style="font-size: 26px; font-weight: 700; color: #8b5cf6;">3. Localização Automática via AML</h3>
+        </div>
+        <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 10px;">
+          <strong style="color: #f1f5f9;">Como funciona:</strong> AML (Advanced Mobile Location) já está instalado nativamente em 99% dos smartphones Android e iOS. No momento da ligação de emergência, o aparelho envia automaticamente a localização GPS precisa para a central — sem necessidade de apps ou configuração.
+        </p>
+        <p style="font-size: 19px; color: #94a3b8; line-height: 1.6;">
+          <strong style="color: #8b5cf6;">Benefício:</strong> Elimina o tempo perdido perguntando "onde você está?" — a central recebe latitude/longitude exata em segundos, mesmo em áreas sem endereço ou quando o solicitante está em pânico.
+        </p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div style="background: #1e293b; border-left: 4px solid #f59e0b; border-radius: 0 12px 12px 0; padding: 24px 32px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="font-size: 32px;">🎛️</span>
+          <h3 style="font-size: 26px; font-weight: 700; color: #f59e0b;">4. Cockpit de Operações Unificado</h3>
+        </div>
+        <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 10px;">
+          <strong style="color: #f1f5f9;">Como funciona:</strong> Tela única e visual para o despachador — transcrição em tempo real, alerta de gravidade, mapa com localização da ocorrência e posição das viaturas.
+        </p>
+        <p style="font-size: 19px; color: #94a3b8; line-height: 1.6;">
+          <strong style="color: #f59e0b;">Benefício:</strong> Tomada de decisão em fração de segundos com todas as informações críticas visíveis de forma simples e intuitiva.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: TECNOLOGIA AML — O QUE É -->
+  <div class="slide slide-pain" id="slide-9" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+    <div class="pain-label" style="color: #22d3ee;">Tecnologia AML</div>
+    <h2 style="font-size: 46px; color: #f1f5f9;">Advanced Mobile Location<br><span style="color: #22d3ee;">A revolução silenciosa já instalada</span></h2>
+    
+    <div style="display: flex; flex-direction: column; gap: 24px; margin-top: 32px;">
+      <div class="insight-box" style="border-left-color: #22d3ee; background: #1e293b;">
+        <strong style="color: #22d3ee; font-size: 20px;">O que é AML?</strong><br>
+        <p style="margin-top: 12px; font-size: 19px; line-height: 1.7;">
+          AML é um padrão global desenvolvido por Google e Apple que permite que smartphones enviem automaticamente sua localização GPS precisa para centrais de emergência durante chamadas para números como 190, 192 e 193.
+        </p>
+      </div>
+
+      <div class="stats-row" style="margin-bottom: 0;">
+        <div class="stat-card" style="background: #1e293b; border-color: #22d3ee44;">
+          <div class="number" style="color: #22d3ee;">99%</div>
+          <div class="label">dos smartphones já têm AML nativo (Android 4.0+ e iOS 13.3+)</div>
+        </div>
+        <div class="stat-card" style="background: #1e293b; border-color: #22d3ee44;">
+          <div class="number" style="color: #22d3ee;">3-5s</div>
+          <div class="label">tempo médio para envio automático da localização</div>
+        </div>
+        <div class="stat-card" style="background: #1e293b; border-color: #22d3ee44;">
+          <div class="number" style="color: #22d3ee;">Zero</div>
+          <div class="label">configuração necessária — funciona automaticamente</div>
+        </div>
+      </div>
+
+      <ul class="bullet-list" style="margin-top: 24px;">
+        <li><span class="icon">🌍</span><span><strong>Adotado globalmente:</strong> Reino Unido, Estônia, Lituânia, Áustria, Bélgica, Finlândia, Irlanda, Nova Zelândia e mais de 20 países</span></li>
+        <li><span class="icon">🔒</span><span><strong>Privacidade garantida:</strong> Localização só é enviada durante chamadas de emergência — nunca em segundo plano</span></li>
+        <li><span class="icon">⚡</span><span><strong>Funciona offline:</strong> Usa GPS + Wi-Fi + torres de celular para precisão mesmo sem internet</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: TECNOLOGIA AML — IMPACTO NO BRASIL -->
+  <div class="slide slide-pain" id="slide-10" style="background: #0f172a;">
+    <div class="pain-label" style="color: #22d3ee;">AML no Brasil</div>
+    <h2 style="font-size: 46px;">Por que o Brasil precisa<br><span>ativar AML agora</span></h2>
+    
+    <div style="display: flex; flex-direction: column; gap: 28px; margin-top: 32px;">
+      <div class="insight-box red">
+        <strong style="font-size: 20px;">O problema atual:</strong><br>
+        <p style="margin-top: 12px; font-size: 19px; line-height: 1.7;">
+          Hoje, atendentes gastam <strong>30-60 segundos</strong> perguntando "onde você está?" — tempo crítico em emergências cardíacas, acidentes graves e situações de violência. Muitas vítimas não conseguem descrever a localização por pânico, desconhecimento ou incapacidade física.
+        </p>
+      </div>
+
+      <div style="background: #1e293b; border-left: 4px solid #22d3ee; border-radius: 0 12px 12px 0; padding: 24px 32px;">
+        <h3 style="font-size: 24px; font-weight: 700; color: #22d3ee; margin-bottom: 16px;">Impacto esperado com AML ativo:</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 8px;">
+              <strong style="color: #f1f5f9;">🚑 Tempo de resposta:</strong><br>
+              Redução de 40-60% no tempo até despacho da viatura
+            </p>
+          </div>
+          <div>
+            <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 8px;">
+              <strong style="color: #f1f5f9;">📍 Precisão:</strong><br>
+              Localização com margem de erro de 5-50 metros (vs. descrição verbal imprecisa)
+            </p>
+          </div>
+          <div>
+            <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 8px;">
+              <strong style="color: #f1f5f9;">💰 Economia:</strong><br>
+              Menos viaturas enviadas para endereços errados
+            </p>
+          </div>
+          <div>
+            <p style="font-size: 19px; color: #cbd5e1; line-height: 1.6; margin-bottom: 8px;">
+              <strong style="color: #f1f5f9;">🛡️ Anti-trote:</strong><br>
+              Trotes de rua ficam rastreáveis — localização real do chamador
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-box" style="border-left-color: #f59e0b;">
+        <strong style="color: #f59e0b; font-size: 20px;">VozGuard + AML = Sinergia perfeita</strong><br>
+        <p style="margin-top: 12px; font-size: 19px; line-height: 1.7;">
+          Nossa plataforma integra nativamente com AML, recebendo a localização automática e cruzando com o mapa de viaturas em tempo real para despacho instantâneo. O cidadão não precisa fazer nada — o sistema já sabe onde ele está.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: CTA -->
+  <div class="slide slide-cta" id="slide-11">
+    <h2>4 dores. 1 sistema.<br><span>VozGuard.</span></h2>
+    <p>O Brasil gasta R$ 1 bilhão por ano em ineficiência nos serviços de emergência. A tecnologia para resolver isso existe — e está pronta para ser implementada.</p>
+    <div class="cta-pills">
+      <div class="pill"><span class="dot"></span>Rastreamento em tempo real de viaturas</div>
+      <div class="pill"><span class="dot"></span>Triagem inteligente de chamadas</div>
+      <div class="pill"><span class="dot"></span>Integração nativa com AML</div>
+      <div class="pill"><span class="dot"></span>Redução de custo operacional</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVEGAÇÃO -->
+<div class="nav">
+  <button id="btnPrev" onclick="changeSlide(-1)" disabled>&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button id="btnNext" onclick="changeSlide(1)">&#8594;</button>
+</div>
+
+<script>
+  let current = 1;
+  const total = 11;
+
+  function changeSlide(dir) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current += dir;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('counter').textContent = current + ' / ' + total;
+    document.getElementById('slideNum').textContent = current + ' / ' + total;
+    document.getElementById('btnPrev').disabled = current === 1;
+    document.getElementById('btnNext').disabled = current === total;
+    document.getElementById('progress').style.width = ((current / total) * 100) + '%';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { if (current < total) changeSlide(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { if (current > 1) changeSlide(-1); }
+  });
+
+  // init
+  document.getElementById('progress').style.width = ((1 / total) * 100) + '%';
+  document.getElementById('slideNum').textContent = '1 / ' + total;
+</script>
+</body>
+</html>

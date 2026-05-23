@@ -1,0 +1,414 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segurança Pública em Colapso — Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0e1a; color: #f1f5f9; overflow: hidden; }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    padding: 60px 80px;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 0; left: 0;
+  }
+  .slide.active { display: flex; }
+
+  /* CAPA */
+  .slide-cover {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f172a 50%, #0a1628 100%);
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .slide-cover .tag {
+    background: #22d3ee22;
+    border: 1px solid #22d3ee55;
+    color: #22d3ee;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    display: inline-block;
+  }
+  .slide-cover h1 {
+    font-size: 58px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #f1f5f9;
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+  .slide-cover h1 span { color: #22d3ee; }
+  .slide-cover p {
+    font-size: 20px;
+    color: #94a3b8;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+  .cover-accent {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #22d3ee18 0%, transparent 70%);
+    border: 1px solid #22d3ee22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+  }
+
+  /* SLIDES DE DOR */
+  .slide-pain {
+    background: #0f172a;
+  }
+  .pain-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #ef4444;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pain-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    background: #ef4444;
+  }
+  .slide-pain h2 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #f1f5f9;
+    line-height: 1.2;
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+  .slide-pain h2 span { color: #22d3ee; }
+
+  .stats-row {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 24px 32px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6);
+  }
+  .stat-card.red::before { background: linear-gradient(90deg, #ef4444, #f97316); }
+  .stat-card.yellow::before { background: linear-gradient(90deg, #f59e0b, #eab308); }
+  .stat-card .number {
+    font-size: 40px;
+    font-weight: 800;
+    color: #22d3ee;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-card.red .number { color: #ef4444; }
+  .stat-card.yellow .number { color: #f59e0b; }
+  .stat-card .label {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  .insight-box {
+    background: #1e293b;
+    border-left: 4px solid #22d3ee;
+    border-radius: 0 8px 8px 0;
+    padding: 20px 28px;
+    font-size: 16px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    max-width: 860px;
+  }
+  .insight-box.red { border-left-color: #ef4444; }
+  .insight-box strong { color: #f1f5f9; }
+
+  .bullet-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 860px;
+  }
+  .bullet-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-size: 17px;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+  .bullet-list li .icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .bullet-list li strong { color: #f1f5f9; }
+
+  /* SLIDE CTA */
+  .slide-cta {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f172a 100%);
+    align-items: center;
+    text-align: center;
+  }
+  .slide-cta h2 {
+    font-size: 48px;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .slide-cta h2 span { color: #22d3ee; }
+  .slide-cta p {
+    font-size: 20px;
+    color: #94a3b8;
+    max-width: 640px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cta-pills {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-size: 15px;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22d3ee;
+    flex-shrink: 0;
+  }
+
+  /* NAVEGAÇÃO */
+  .nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+  }
+  .nav button {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav button:hover { background: #22d3ee; border-color: #22d3ee; color: #0a0e1a; }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+  .nav .counter {
+    font-size: 13px;
+    color: #64748b;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* SLIDE NUMBER */
+  .slide-num {
+    position: fixed;
+    top: 28px;
+    right: 40px;
+    font-size: 12px;
+    color: #334155;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  /* PROGRESS BAR */
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6);
+    transition: width 0.3s ease;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="slide-num" id="slideNum"></div>
+
+<div class="deck">
+
+  <!-- SLIDE 1: CAPA -->
+  <div class="slide slide-cover active" id="slide-1">
+    <div class="tag">Pitch Deck · Problema</div>
+    <h1>Segurança Pública<br><span>em Colapso Silencioso</span></h1>
+    <p>Os números de emergência do Brasil falham todos os dias — e ninguém está medindo o custo real disso.</p>
+    <div class="cover-accent">🚨</div>
+  </div>
+
+  <!-- SLIDE 2: DOR 1 — TROTES -->
+  <div class="slide slide-pain" id="slide-2">
+    <div class="pain-label">Dor 1 — Trotes</div>
+    <h2>Milhares de chamadas falsas<br><span>drenam o sistema todo dia</span></h2>
+    <div class="stats-row">
+      <div class="stat-card red">
+        <div class="number">360+</div>
+        <div class="label">trotes por dia só no Rio de Janeiro (2025)</div>
+      </div>
+      <div class="stat-card red">
+        <div class="number">10%</div>
+        <div class="label">das ligações na Bahia são trotes (jan–abr 2026)</div>
+      </div>
+      <div class="stat-card red">
+        <div class="number">30%</div>
+        <div class="label">das chamadas no Pará eram falsas em 2022</div>
+      </div>
+    </div>
+    <div class="insight-box red">
+      Cada trote não é apenas uma ligação perdida — é uma <strong>viatura deslocada, um atendente bloqueado e uma vida real sem socorro</strong>.
+    </div>
+  </div>
+
+  <!-- SLIDE 3: DOR 2 — CUSTO FINANCEIRO -->
+  <div class="slide slide-pain" id="slide-3">
+    <div class="pain-label">Dor 2 — Custo Financeiro</div>
+    <h2>R$ 1 bilhão desperdiçado<br><span>por ano com chamadas falsas</span></h2>
+    <div class="stats-row">
+      <div class="stat-card red">
+        <div class="number">R$ 1 bi</div>
+        <div class="label">prejuízo anual estimado pelo Senado Federal</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="number">20%</div>
+        <div class="label">dos chamados ao SAMU em Porto Alegre são enganos ou trotes</div>
+      </div>
+    </div>
+    <ul class="bullet-list">
+      <li><span class="icon">⛽</span><span><strong>Combustível desperdiçado</strong> em deslocamentos inúteis de viaturas</span></li>
+      <li><span class="icon">🔧</span><span><strong>Desgaste acelerado</strong> de equipamentos e frotas de emergência</span></li>
+      <li><span class="icon">👮</span><span><strong>Horas de profissionais</strong> mobilizados para ocorrências inexistentes</span></li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 4: DOR 3 — INDISPONIBILIDADE DE VIATURAS -->
+  <div class="slide slide-pain" id="slide-4">
+    <div class="pain-label">Dor 3 — Indisponibilidade de Viaturas</div>
+    <h2>A viatura está ocupada.<br><span>Mas ninguém sabe onde ela está.</span></h2>
+    <ul class="bullet-list" style="margin-bottom: 36px;">
+      <li><span class="icon">🗺️</span><span>Centrais de despacho <strong>não têm visibilidade em tempo real</strong> da posição e status de cada viatura</span></li>
+      <li><span class="icon">📞</span><span>O atendente decide o despacho <strong>com base em informação desatualizada</strong> ou por rádio manual</span></li>
+      <li><span class="icon">⏱️</span><span>Minutos perdidos na busca pela viatura mais próxima disponível <strong>custam vidas em emergências reais</strong></span></li>
+      <li><span class="icon">🔄</span><span>Viaturas ocupadas com trotes ficam <strong>indisponíveis para ocorrências legítimas</strong> simultâneas</span></li>
+    </ul>
+    <div class="insight-box">
+      Em emergências cardíacas, cada minuto sem atendimento reduz em <strong>10% a chance de sobrevivência</strong>. A falta de rastreamento em tempo real é um problema de vida ou morte.
+    </div>
+  </div>
+
+  <!-- SLIDE 5: DOR 4 — PROBLEMA DO ATENDENTE -->
+  <div class="slide slide-pain" id="slide-5">
+    <div class="pain-label">Dor 4 — O Atendente no Limite</div>
+    <h2>O elo mais fraco do sistema<br><span>é humano — e está sobrecarregado</span></h2>
+    <ul class="bullet-list" style="margin-bottom: 36px;">
+      <li><span class="icon">🧠</span><span>Atendentes tomam <strong>decisões críticas sob pressão extrema</strong>, sem suporte de dados em tempo real</span></li>
+      <li><span class="icon">��</span><span>Filtrar trotes exige <strong>treinamento contínuo e experiência</strong> — recurso escasso e caro</span></li>
+      <li><span class="icon">😤</span><span>Assédio verbal e trotes elaborados <strong>causam esgotamento e alta rotatividade</strong> nas equipes</span></li>
+      <li><span class="icon">📋</span><span>Sem sistema inteligente de triagem, <strong>cada ligação depende 100% do julgamento humano</strong></span></li>
+    </ul>
+    <div class="insight-box red">
+      Projetos como "Alozinho" (Amapá) reduziram trotes em <strong>35%</strong> com educação — mas a tecnologia de triagem inteligente ainda é praticamente <strong>inexistente nas centrais brasileiras</strong>.
+    </div>
+  </div>
+
+  <!-- SLIDE 6: CTA -->
+  <div class="slide slide-cta" id="slide-6">
+    <h2>4 dores. 1 sistema.<br><span>Zero solução no mercado.</span></h2>
+    <p>O Brasil gasta R$ 1 bilhão por ano em ineficiência nos serviços de emergência. A tecnologia para resolver isso existe — falta quem a aplique.</p>
+    <div class="cta-pills">
+      <div class="pill"><span class="dot"></span>Rastreamento em tempo real de viaturas</div>
+      <div class="pill"><span class="dot"></span>Triagem inteligente de chamadas</div>
+      <div class="pill"><span class="dot"></span>Suporte ao atendente com IA</div>
+      <div class="pill"><span class="dot"></span>Redução de custo operacional</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVEGAÇÃO -->
+<div class="nav">
+  <button id="btnPrev" onclick="changeSlide(-1)" disabled>&#8592;</button>
+  <span class="counter" id="counter">1 / 6</span>
+  <button id="btnNext" onclick="changeSlide(1)">&#8594;</button>
+</div>
+
+<script>
+  let current = 1;
+  const total = 6;
+
+  function changeSlide(dir) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current += dir;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('counter').textContent = current + ' / ' + total;
+    document.getElementById('slideNum').textContent = current + ' / ' + total;
+    document.getElementById('btnPrev').disabled = current === 1;
+    document.getElementById('btnNext').disabled = current === total;
+    document.getElementById('progress').style.width = ((current / total) * 100) + '%';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { if (current < total) changeSlide(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { if (current > 1) changeSlide(-1); }
+  });
+
+  // init
+  document.getElementById('progress').style.width = ((1 / total) * 100) + '%';
+  document.getElementById('slideNum').textContent = '1 / ' + total;
+</script>
+</body>
+</html>

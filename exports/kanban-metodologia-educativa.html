@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban — Metodologia, Papéis, Artefatos e Cadências</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #0a0e1a;
+        color: #f1f5f9;
+        overflow: hidden;
+        height: 100vh;
+      }
+      .slide {
+        display: none;
+        height: 100vh;
+        padding: 60px 80px;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+      }
+      .slide.active {
+        display: flex;
+      }
+      .slide-number {
+        position: absolute;
+        bottom: 30px;
+        right: 40px;
+        font-size: 14px;
+        color: #64748b;
+      }
+      h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #22d3ee;
+        line-height: 1.2;
+      }
+      h2 {
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: #22d3ee;
+      }
+      h3 {
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-bottom: 16px;
+        color: #94a3b8;
+      }
+      p {
+        font-size: 1.3rem;
+        line-height: 1.7;
+        color: #cbd5e1;
+        margin-bottom: 12px;
+      }
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      ul li {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #cbd5e1;
+        padding-left: 28px;
+        position: relative;
+        margin-bottom: 8px;
+      }
+      ul li::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #22d3ee;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>
+
+<!-- Slide 1: Capa -->
+<div class="slide active" id="slide-1">
+  <h1>KANBAN</h1>
+  <h3>Metodologia, Princípios, Papéis, Artefatos e Cadências</h3>
+  <p style="margin-top: 40px; font-size: 1rem; color: #64748b">
+    Apresentação Educativa • 2026
+  </p>
+  <div class="slide-number">1 / 18</div>
+</div>
+
+<!-- Slide 2: Agenda -->
+<div class="slide" id="slide-2">
+  <h2>Agenda</h2>
+  <ul>
+    <li>O que é Kanban</li>
+    <li>Origem e história</li>
+    <li>Os 4 princípios fundamentais</li>
+    <li>As 6 práticas essenciais</li>
+    <li>O quadro Kanban (artefato central)</li>
+    <li>Limites de WIP</li>
+    <li>Classes de Serviço</li>
+    <li>Papéis no Kanban</li>
+    <li>As 7 Cadências (cerimônias)</li>
+    <li>Métricas-chave</li>
+    <li>Kanban vs. Scrum</li>
+    <li>Quando usar Kanban</li>
+  </ul>
+  <div class="slide-number">2 / 18</div>
+</div>
+
+<!-- Slide 3: O que é Kanban -->
+<div class="slide" id="slide-3">
+  <h2>O que é Kanban?</h2>
+  <p>
+    Kanban é uma estratégia para otimizar o fluxo de valor através de um
+    sistema.
+  </p>
+  <ul style="margin-top: 20px">
+    <li>Sistema de sinalização que controla o fluxo de trabalho</li>
+    <li>Foco em visualização, gestão ativa e melhoria contínua</li>
+    <li>Não prescreve papéis fixos nem sprints — é evolutivo</li>
+    <li>Aplicável a qualquer contexto: TI, finanças, saúde, educação</li>
+  </ul>
+  <p style="margin-top: 24px; font-size: 1rem; color: #64748b">
+    Fonte: Open Guide to Kanban (kanbanguides.org, v2025.7)
+  </p>
+  <div class="slide-number">3 / 18</div>
+</div>
+
+<!-- Slide 4: Origem e História -->
+<div class="slide" id="slide-4">
+  <h2>Origem e História</h2>
+  <ul>
+    <li>
+      <strong style="color: #22d3ee">1940s</strong> — Toyota cria o sistema
+      Kanban na manufatura (cartões de sinalização)
+    </li>
+    <li>
+      <strong style="color: #22d3ee">2004</strong> — David J. Anderson adapta
+      Kanban para trabalho do conhecimento
+    </li>
+    <li>
+      <strong style="color: #22d3ee">2007</strong> — Primeiro uso formal em
+      equipe de TI (Corbis)
+    </li>
+    <li>
+      <strong style="color: #22d3ee">2010</strong> — Publicação do livro
+      "Kanban" de Anderson
+    </li>
+    <li>
+      <strong style="color: #22d3ee">2025</strong> — Kanban Guide v2025
+      (comunidade aberta, guia unificado)
+    </li>
+  </ul>
+  <p style="margin-top: 20px">
+    A palavra カンバン (kanban) significa "cartão visual" ou "sinalização" em
+    japonês.
+  </p>
+  <div class="slide-number">4 / 18</div>
+</div>
+
+<!-- Slide 5: Os 4 Princípios Fundamentais -->
+<div class="slide" id="slide-5">
+  <h2>Os 4 Princípios Fundamentais</h2>
+  <ul>
+    <li>
+      <strong style="color: #22d3ee">1.</strong> Comece com o que você faz hoje
+      — respeite processos, papéis e responsabilidades atuais
+    </li>
+    <li>
+      <strong style="color: #22d3ee">2.</strong> Concorde em buscar mudança
+      incremental e evolutiva — sem revoluções abruptas
+    </li>
+    <li>
+      <strong style="color: #22d3ee">3.</strong> Encoraje atos de liderança em
+      todos os níveis — não apenas gestores
+    </li>
+    <li>
+      <strong style="color: #22d3ee">4.</strong> Foque em necessidades e
+      expectativas do cliente — entregue valor real
+    </li>
+  </ul>
+  <p style="margin-top: 20px; font-size: 1rem; color: #64748b">
+    Fonte: Cloudwards / Wrike — Kanban Principles & Practices, 2026
+  </p>
+  <div class="slide-number">5 / 18</div>
+</div>
+
+<!-- Slide 6: As 6 Práticas Essenciais -->
+<div class="slide" id="slide-6">
+  <h2>As 6 Práticas Essenciais</h2>
+  <ul>
+    <li>
+      <strong style="color: #22d3ee">1. Visualizar o fluxo de trabalho</strong>
+      — tornar o invisível visível
+    </li>
+    <li>
+      <strong style="color: #22d3ee"
+        >2. Limitar o trabalho em progresso (WIP)</strong
+      >
+      — parar de começar, começar a terminar
+    </li>
+    <li>
+      <strong style="color: #22d3ee">3. Gerenciar o fluxo</strong> — monitorar e
+      otimizar ativamente
+    </li>
+    <li>
+      <strong style="color: #22d3ee">4. Tornar políticas explícitas</strong> —
+      regras claras para todos
+    </li>
+    <li>
+      <strong style="color: #22d3ee">5. Implementar ciclos de feedback</strong>
+      — cadências regulares
+    </li>
+    <li>
+      <strong style="color: #22d3ee"
+        >6. Melhorar colaborativamente, evoluir experimentalmente</strong
+      >
+      — kaizen contínuo
+    </li>
+  </ul>
+  <div class="slide-number">6 / 18</div>
+</div>
+
+<!-- Slide 7: O Quadro Kanban -->
+<div class="slide" id="slide-7">
+  <h2>O Quadro Kanban — Artefato Central</h2>
+  <div style="display: flex; gap: 16px; margin-top: 30px">
+    <div
+      style="
+        flex: 1;
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 20px;
+        border-top: 4px solid #64748b;
+      "
+    >
+      <p
+        style="
+          text-align: center;
+          font-weight: 600;
+          color: #94a3b8;
+          font-size: 1rem;
+        "
+      >
+        BACKLOG
+      </p>
+      <p style="text-align: center; font-size: 0.9rem; color: #64748b">
+        Itens aguardando
+      </p>
+    </div>
+    <div
+      style="
+        flex: 1;
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 20px;
+        border-top: 4px solid #f59e0b;
+      "
+    >
+      <p
+        style="
+          text-align: center;
+          font-weight: 600;
+          color: #f59e0b;
+          font-size: 1rem;
+        "
+      >
+        EM PROGRESSO
+      </p>
+      <p style="text-align: center; font-size: 0.9rem; color: #64748b">
+        WIP Limit: 3
+      </p>
+    </div>
+    <div
+      style="
+        flex: 1;
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 20px;
+        border-top: 4px solid #a78bfa;
+      "
+    >
+      <p
+        style="
+          text-align: center;
+          font-weight: 600;
+          color: #a78bfa;
+          font-size: 1rem;
+        "
+      >
+        REVISÃO
+      </p>
+      <p style="text-align: center; font-size: 0.9rem; color: #64748b">
+        WIP Limit: 2
+      </p>
+    </div>
+    <div
+      style="
+        flex: 1;
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 20px;
+        border-top: 4px solid #22c55e;
+      "
+    >
+      <p
+        style="
+          text-align: center;
+          font-weight: 600;
+          color: #22c55e;
+          font-size: 1rem;
+        "
+      >
+        CONCLUÍDO
+      </p>
+      <p style="text-align: center; font-size: 0.9rem; color: #64748b">
+        Entregue ✓
+      </p>
+    </div>
+  </div>
+  <p style="margin-top: 24px; font-size: 1.1rem">
+    O quadro é a representação visual do fluxo. Cada cartão = um item de
+    trabalho.
+  </p>
+  <div class="slide-number">7 / 18</div>
+</div>
+
+<!-- Slide 8: Limites de WIP -->
+<div class="slide" id="slide-8">
+  <h2>Limites de WIP (Work In Progress)</h2>
+  <p>
+    O mecanismo mais poderoso do Kanban: restringir a quantidade de itens
+    simultâneos em cada etapa.
+  </p>
+  <ul style="margin-top: 20px">
+    <li>Reduz multitasking e sobrecarga cognitiva</li>
+    <li>Expõe gargalos rapidamente — problemas ficam visíveis</li>
+    <li>Melhora tempo de entrega (lead time) e previsibilidade</li>
+    <li>Sistema "pull" — novo trabalho só entra quando há capacidade</li>
+  </ul>
+  <p
+    style="
+      margin-top: 20px;
+      background: #1e293b;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #22d3ee;
+      font-size: 1.1rem;
+    "
+  >
+    💡 Regra de ouro:
+    <strong style="color: #22d3ee">"Pare de começar, comece a terminar"</strong>
+  </p>
+  <div class="slide-number">8 / 18</div>
+</div>
+
+<!-- Slide 9: Classes de Serviço -->
+<div class="slide" id="slide-9">
+  <h2>Classes de Serviço</h2>
+  <p>Categorizam itens de trabalho por urgência e impacto econômico:</p>
+  <ul style="margin-top: 20px">
+    <li>
+      <strong style="color: #ef4444">Expedite</strong> — urgência máxima, ignora
+      WIP limits (ex: bug crítico em produção)
+    </li>
+    <li>
+      <strong style="color: #f59e0b">Data Fixa</strong> — tem deadline não
+      negociável (ex: compliance regulatório)
+    </li>
+    <li>
+      <strong style="color: #22d3ee">Padrão</strong> — fluxo normal, FIFO com
+      priorização
+    </li>
+    <li>
+      <strong style="color: #a78bfa">Intangível</strong> — sem urgência
+      imediata, mas gera valor futuro (ex: dívida técnica)
+    </li>
+  </ul>
+  <p style="margin-top: 16px">
+    Classes de serviço permitem políticas diferenciadas sem criar filas
+    paralelas.
+  </p>
+  <div class="slide-number">9 / 18</div>
+</div>
+
+<!-- Slide 10: Papéis no Kanban -->
+<div class="slide" id="slide-10">
+  <h2>Papéis no Kanban</h2>
+  <p>
+    Kanban não prescreve papéis novos — respeita estruturas existentes. Porém,
+    dois papéis emergem naturalmente:
+  </p>
+  <ul style="margin-top: 20px">
+    <li>
+      <strong style="color: #22d3ee">Service Request Manager (SRM)</strong> —
+      controla a entrada de demandas, prioriza backlog, comunica com
+      stakeholders
+    </li>
+    <li>
+      <strong style="color: #22d3ee">Service Delivery Manager (SDM)</strong> —
+      monitora fluxo, métricas, lead time e melhoria contínua
+    </li>
+    <li>
+      <strong style="color: #94a3b8">Kanban Coach</strong> — facilita adoção,
+      treina equipe, guia design do sistema (geralmente temporário)
+    </li>
+    <li>
+      <strong style="color: #94a3b8">Time de Entrega</strong> — devs, designers,
+      testers — autogerenciam o trabalho no board
+    </li>
+  </ul>
+  <p style="margin-top: 16px; font-size: 1rem; color: #64748b">
+    Fonte: Kanban Tool — Kanban Roles and Responsibilities, 2026
+  </p>
+  <div class="slide-number">10 / 18</div>
+</div>
+
+<!-- Slide 11: As 7 Cadências (Cerimônias) - Visão Geral -->
+<div class="slide" id="slide-11">
+  <h2>As 7 Cadências do Kanban</h2>
+  <p>
+    Cadências são reuniões cíclicas com propósito definido — o "sistema
+    operacional" da melhoria contínua:
+  </p>
+  <ul style="margin-top: 16px">
+    <li>
+      <strong style="color: #22d3ee">1. Strategy Review</strong> — trimestral —
+      revisão de portfólio e direção estratégica
+    </li>
+    <li>
+      <strong style="color: #22d3ee">2. Operations Review</strong> — mensal —
+      coordenação entre times/serviços
+    </li>
+    <li>
+      <strong style="color: #22d3ee">3. Risk Review</strong> — mensal —
+      identificar e mitigar riscos sistêmicos
+    </li>
+    <li>
+      <strong style="color: #22d3ee">4. Service Delivery Review</strong> —
+      quinzenal — avaliar métricas e SLEs
+    </li>
+    <li>
+      <strong style="color: #22d3ee">5. Replenishment Meeting</strong> — semanal
+      — selecionar novos itens para o fluxo
+    </li>
+    <li>
+      <strong style="color: #22d3ee">6. Kanban Meeting (Standup)</strong> —
+      diária — fluxo, bloqueios, ações imediatas
+    </li>
+    <li>
+      <strong style="color: #22d3ee">7. Delivery Planning</strong> — sob demanda
+      — planejar entregas específicas
+    </li>
+  </ul>
+  <div class="slide-number">11 / 18</div>
+</div>
+
+<!-- Slide 12: Cadências em Detalhe (Operacional) -->
+<div class="slide" id="slide-12">
+  <h2>Cadências Operacionais — Detalhe</h2>
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    "
+  >
+    <div style="background: #1e293b; padding: 20px; border-radius: 12px">
+      <p style="color: #22d3ee; font-weight: 600">Kanban Meeting (Diária)</p>
+      <p style="font-size: 1rem">
+        Foco no fluxo do quadro, não em pessoas. Identifica bloqueios e ações
+        para destravar itens.
+      </p>
+    </div>
+    <div style="background: #1e293b; padding: 20px; border-radius: 12px">
+      <p style="color: #22d3ee; font-weight: 600">Replenishment (Semanal)</p>
+      <p style="font-size: 1rem">
+        Decide quais itens entram no sistema baseado em capacidade, urgência e
+        impacto econômico.
+      </p>
+    </div>
+    <div style="background: #1e293b; padding: 20px; border-radius: 12px">
+      <p style="color: #22d3ee; font-weight: 600">
+        Service Delivery Review (Quinzenal)
+      </p>
+      <p style="font-size: 1rem">
+        Analisa métricas de entrega: lead time, throughput, aging. Ajusta
+        políticas conforme dados.
+      </p>
+    </div>
+    <div style="background: #1e293b; padding: 20px; border-radius: 12px">
+      <p style="color: #22d3ee; font-weight: 600">
+        Delivery Planning (Sob demanda)
+      </p>
+      <p style="font-size: 1rem">
+        Coordena entregas específicas, gerencia dependências entre itens.
+      </p>
+    </div>
+  </div>
+  <div class="slide-number">12 / 18</div>
+</div>
+
+<!-- Slide 13: Cadências Estratégicas -->
+<div class="slide" id="slide-13">
+  <h2>Cadências Estratégicas — Detalhe</h2>
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 30px;
+    "
+  >
+    <div
+      style="
+        background: #1e293b;
+        padding: 24px;
+        border-radius: 12px;
+        border-top: 3px solid #22d3ee;
+      "
+    >
+      <p style="color: #22d3ee; font-weight: 600; margin-bottom: 8px">
+        Strategy Review
+      </p>
+      <p style="font-size: 0.95rem">
+        Trimestral. Reavalia portfólio e prioridades com base em dados de
+        capacidade e mercado.
+      </p>
+    </div>
+    <div
+      style="
+        background: #1e293b;
+        padding: 24px;
+        border-radius: 12px;
+        border-top: 3px solid #a78bfa;
+      "
+    >
+      <p style="color: #a78bfa; font-weight: 600; margin-bottom: 8px">
+        Operations Review
+      </p>
+      <p style="font-size: 0.95rem">
+        Mensal. Coordenação entre múltiplos serviços/times. Resolve dependências
+        cross-team.
+      </p>
+    </div>
+    <div
+      style="
+        background: #1e293b;
+        padding: 24px;
+        border-radius: 12px;
+        border-top: 3px solid #f59e0b;
+      "
+    >
+      <p style="color: #f59e0b; font-weight: 600; margin-bottom: 8px">
+        Risk Review
+      </p>
+      <p style="font-size: 0.95rem">
+        Mensal. Mapeia riscos sistêmicos, itens envelhecendo, bloqueios
+        recorrentes.
+      </p>
+    </div>
+  </div>
+  <p style="margin-top: 24px">
+    As cadências formam uma rede bidirecional — decisões estratégicas alimentam
+    as operacionais e vice-versa.
+  </p>
+  <div class="slide-number">13 / 18</div>
+</div>
+
+<!-- Slide 14: Métricas-Chave -->
+<div class="slide" id="slide-14">
+  <h2>Métricas-Chave do Kanban</h2>
+  <ul>
+    <li>
+      <strong style="color: #22d3ee">Lead Time</strong> — tempo total desde o
+      pedido até a entrega ao cliente
+    </li>
+    <li>
+      <strong style="color: #22d3ee">Cycle Time</strong> — tempo que um item
+      leva dentro do sistema ativo
+    </li>
+    <li>
+      <strong style="color: #22d3ee">Throughput</strong> — quantidade de itens
+      entregues por unidade de tempo
+    </li>
+    <li>
+      <strong style="color: #22d3ee">WIP</strong> — trabalho em progresso em
+      cada momento
+    </li>
+    <li>
+      <strong style="color: #22d3ee">Aging</strong> — há quanto tempo itens
+      estão em progresso (alerta de estagnação)
+    </li>
+    <li>
+      <strong style="color: #22d3ee">CFD (Cumulative Flow Diagram)</strong> —
+      visualiza fluxo cumulativo por etapa ao longo do tempo
+    </li>
+  </ul>
+  <p
+    style="
+      margin-top: 20px;
+      background: #1e293b;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #22d3ee;
+    "
+  >
+    📊 Lei de Little:
+    <strong style="color: #22d3ee">Lead Time = WIP ÷ Throughput</strong>
+  </p>
+  <div class="slide-number">14 / 18</div>
+</div>
+
+<!-- Slide 15: Kanban vs Scrum -->
+<div class="slide" id="slide-15">
+  <h2>Kanban vs. Scrum</h2>
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    "
+  >
+    <div style="background: #1e293b; padding: 24px; border-radius: 12px">
+      <p
+        style="
+          color: #22d3ee;
+          font-weight: 700;
+          font-size: 1.3rem;
+          margin-bottom: 12px;
+        "
+      >
+        Kanban
+      </p>
+      <ul>
+        <li>Fluxo contínuo</li>
+        <li>Sem sprints fixos</li>
+        <li>Sem papéis prescritos</li>
+        <li>WIP limits por coluna</li>
+        <li>Mudança evolutiva</li>
+        <li>Métricas de fluxo</li>
+      </ul>
+    </div>
+    <div style="background: #1e293b; padding: 24px; border-radius: 12px">
+      <p
+        style="
+          color: #a78bfa;
+          font-weight: 700;
+          font-size: 1.3rem;
+          margin-bottom: 12px;
+        "
+      >
+        Scrum
+      </p>
+      <ul>
+        <li>Iterações time-boxed (sprints)</li>
+        <li>Sprints de 1-4 semanas</li>
+        <li>Papéis fixos (PO, SM, Dev Team)</li>
+        <li>Commitment por sprint</li>
+        <li>Cerimônias obrigatórias</li>
+        <li>Velocity como métrica</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top: 20px">
+    Não são excludentes — muitas equipes combinam ambos (Scrumban).
+  </p>
+  <div class="slide-number">15 / 18</div>
+</div>
+
+<!-- Slide 16: Quando Usar Kanban -->
+<div class="slide" id="slide-16">
+  <h2>Quando Usar Kanban?</h2>
+  <ul>
+    <li>
+      Trabalho com demanda imprevisível ou variável (suporte, operações,
+      manutenção)
+    </li>
+    <li>Equipes que já têm processos e querem melhorar sem ruptura</li>
+    <li>Necessidade de entrega contínua (sem esperar fim de sprint)</li>
+    <li>Múltiplos tipos de trabalho com prioridades diferentes</li>
+    <li>Foco em reduzir lead time e melhorar previsibilidade</li>
+    <li>Times maduros que precisam de menos cerimônia e mais fluxo</li>
+  </ul>
+  <p
+    style="
+      margin-top: 20px;
+      background: #1e293b;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #f59e0b;
+    "
+  >
+    ⚠️ Kanban funciona mal se a equipe não tem disciplina para respeitar WIP
+    limits e manter o quadro atualizado.
+  </p>
+  <div class="slide-number">16 / 18</div>
+</div>
+
+<!-- Slide 17: Dicas para Implementar -->
+<div class="slide" id="slide-17">
+  <h2>Dicas para Implementar Kanban</h2>
+  <ul>
+    <li>
+      <strong style="color: #22d3ee">1.</strong> Mapeie seu fluxo real (não o
+      ideal) — seja honesto
+    </li>
+    <li>
+      <strong style="color: #22d3ee">2.</strong> Comece com WIP limits
+      conservadores — ajuste com dados
+    </li>
+    <li>
+      <strong style="color: #22d3ee">3.</strong> Torne políticas visíveis no
+      próprio quadro
+    </li>
+    <li>
+      <strong style="color: #22d3ee">4.</strong> Use a Kanban Meeting diária
+      focada no board, não em status report
+    </li>
+    <li>
+      <strong style="color: #22d3ee">5.</strong> Meça lead time desde o primeiro
+      dia — é seu termômetro
+    </li>
+    <li>
+      <strong style="color: #22d3ee">6.</strong> Celebre experimentos — nem toda
+      mudança precisa dar certo
+    </li>
+  </ul>
+  <div class="slide-number">17 / 18</div>
+</div>
+
+<!-- Slide 18: Referências -->
+<div class="slide" id="slide-18">
+  <h2>Referências</h2>
+  <ul style="font-size: 1rem">
+    <li>
+      [1] Kanban Guides. "Open Guide to Kanban — In the Context of Knowledge
+      Work", v2025.7. kanbanguides.org
+    </li>
+    <li>
+      [2] Anderson, David J. "Kanban: Successful Evolutionary Change for Your
+      Technology Business", 2010.
+    </li>
+    <li>
+      [3] Kanban Tool. "Kanban Roles and Responsibilities", 2026.
+      kanbantool.com/kanban-guide/kanban-roles
+    </li>
+    <li>
+      [4] Kanban Tool. "The Kanban Cadence: Rhythms That Stabilize Strategy and
+      Flow", 2026. kanbantool.com/kanban-guide/kanban-cadences
+    </li>
+    <li>
+      [5] Cloudwards. "The 4 Kanban Principles & 6 Practices Explained for
+      2026". cloudwards.net
+    </li>
+    <li>
+      [6] Wrike. "Kanban Principles and Practices — The 4 Core Principles & 6
+      Key Practices", 2026. wrike.com
+    </li>
+    <li>
+      [7] Businessmap. "Kanban Cadences for Aligning Communication", 2025.
+      businessmap.io
+    </li>
+  </ul>
+  <p style="margin-top: 30px; color: #64748b; font-size: 0.9rem">
+    Apresentação gerada em Junho/2026
+  </p>
+  <div class="slide-number">18 / 18</div>
+</div>
+
+<!-- Navigation Script -->
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+
+  function showSlide(index) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[index].classList.add('active');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      current = Math.min(current + 1, slides.length - 1);
+      showSlide(current);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      current = Math.max(current - 1, 0);
+      showSlide(current);
+    } else if (e.key === 'Home') {
+      current = 0;
+      showSlide(current);
+    } else if (e.key === 'End') {
+      current = slides.length - 1;
+      showSlide(current);
+    }
+  });
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) { current = Math.min(current + 1, slides.length - 1); }
+      else { current = Math.max(current - 1, 0); }
+      showSlide(current);
+    }
+  });
+
+  // Click navigation
+  document.addEventListener('click', (e) => {
+    if (e.clientX > window.innerWidth / 2) {
+      current = Math.min(current + 1, slides.length - 1);
+    } else {
+      current = Math.max(current - 1, 0);
+    }
+    showSlide(current);
+  });
+</script>
+</body>
+</html>
